@@ -106,15 +106,15 @@ export const ProjectCreationWizard: React.FC = () => {
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 step === s.id
-                  ? 'bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950'
+                  ? 'bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950 shadow-2xs'
                   : step > s.id
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-semibold'
               }`}
             >
               {step > s.id ? <Check className="w-3.5 h-3.5" /> : s.id}
             </div>
-            <span className={`text-[11px] font-semibold hidden sm:inline ${step === s.id ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
+            <span className={`text-[11px] font-semibold hidden sm:inline ${step === s.id ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-600 dark:text-slate-400'}`}>
               {s.label}
             </span>
             {idx < 4 && <div className="w-6 sm:w-10 h-0.5 bg-slate-200 dark:bg-slate-800 hidden sm:block" />}
@@ -123,10 +123,10 @@ export const ProjectCreationWizard: React.FC = () => {
       </div>
 
       {/* Main Form Container */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-xs">
+      <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-xl">
         
         {error && (
-          <div className="mb-6 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs">
+          <div className="mb-6 p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs">
             {error}
           </div>
         )}
@@ -143,9 +143,9 @@ export const ProjectCreationWizard: React.FC = () => {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g. Full-Stack React & PHP SaaS Platform with MySQL Escrow"
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs font-medium"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block font-medium">
                 Be specific about technology stack and deliverables.
               </span>
             </div>
@@ -157,10 +157,10 @@ export const ProjectCreationWizard: React.FC = () => {
               <select
                 value={formData.service_id}
                 onChange={(e) => setFormData({ ...formData, service_id: Number(e.target.value) })}
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs font-medium"
               >
                 {services.map((srv) => (
-                  <option key={srv.id} value={srv.id}>
+                  <option key={srv.id} value={srv.id} className="dark:bg-[#151B2E]">
                     {srv.name} ({srv.category}) — Avg. ${srv.avg_budget}
                   </option>
                 ))}
@@ -181,7 +181,7 @@ export const ProjectCreationWizard: React.FC = () => {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe your vision, core features, and architectural goals..."
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs font-medium"
               />
             </div>
 
@@ -194,7 +194,7 @@ export const ProjectCreationWizard: React.FC = () => {
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
                 placeholder="1. React frontend with clean Tailwind components&#10;2. PHP 8.2 backend with PDO&#10;3. MySQL normalized schema"
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none font-mono"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none font-mono shadow-2xs"
               />
             </div>
           </div>
@@ -226,10 +226,10 @@ export const ProjectCreationWizard: React.FC = () => {
                         ]
                       });
                     }}
-                    className="w-full pl-9 pr-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none tabular-nums font-mono font-bold"
+                    className="w-full pl-9 pr-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none tabular-nums font-mono font-bold shadow-2xs"
                   />
                 </div>
-                <span className="text-[11px] text-slate-400 mt-1 block">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block font-medium">
                   Funds will be protected in TrustLance AI Escrow Vault upon hiring.
                 </span>
               </div>
@@ -244,7 +244,7 @@ export const ProjectCreationWizard: React.FC = () => {
                     type="date"
                     value={formData.deadline}
                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                    className="w-full pl-9 pr-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none"
+                    className="w-full pl-9 pr-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs"
                   />
                 </div>
               </div>
@@ -259,7 +259,7 @@ export const ProjectCreationWizard: React.FC = () => {
                 value={formData.revision_expectations}
                 onChange={(e) => setFormData({ ...formData, revision_expectations: e.target.value })}
                 placeholder="e.g. Up to 2 comprehensive rounds included."
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-700 text-xs focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs font-medium"
               />
             </div>
           </div>
@@ -272,13 +272,13 @@ export const ProjectCreationWizard: React.FC = () => {
               <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-2">
                 Configure Escrow Milestones
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
                 Milestones allow funds to be released incrementally upon your inspection of each deliverable.
               </p>
 
               <div className="space-y-3">
                 {formData.milestones.map((m, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div key={idx} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
                     <div className="flex-1">
                       <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">
                         Milestone {idx + 1}
@@ -291,12 +291,12 @@ export const ProjectCreationWizard: React.FC = () => {
                           updated[idx].title = e.target.value;
                           setFormData({ ...formData, milestones: updated });
                         }}
-                        className="w-full mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg font-semibold text-slate-900 dark:text-white text-xs"
+                        className="w-full mt-1 bg-white dark:bg-[#0B1020] border border-slate-300 dark:border-white/10 px-3 py-1.5 rounded-xl font-semibold text-slate-900 dark:text-white text-xs shadow-2xs"
                       />
                     </div>
 
                     <div className="w-full sm:w-36">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                         Amount ($)
                       </span>
                       <input
@@ -307,7 +307,7 @@ export const ProjectCreationWizard: React.FC = () => {
                           updated[idx].amount = Number(e.target.value);
                           setFormData({ ...formData, milestones: updated });
                         }}
-                        className="w-full mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg tabular-nums font-mono font-bold text-slate-900 dark:text-white text-xs"
+                        className="w-full mt-1 bg-white dark:bg-[#0B1020] border border-slate-300 dark:border-white/10 px-3 py-1.5 rounded-xl tabular-nums font-mono font-bold text-slate-900 dark:text-white text-xs shadow-2xs"
                       />
                     </div>
                   </div>
@@ -320,30 +320,30 @@ export const ProjectCreationWizard: React.FC = () => {
         {/* STEP 5 */}
         {step === 5 && (
           <div className="space-y-6 text-xs">
-            <div className="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-blue-200 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0" />
+            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-800 dark:text-blue-200 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0" />
               <span>Project scope ready for publication to MySQL marketplace.</span>
             </div>
 
-            <div className="space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
-              <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
-                <span className="text-slate-500">Project Title:</span>
+            <div className="space-y-3 p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+              <div className="flex justify-between border-b border-slate-200 dark:border-white/5 pb-2">
+                <span className="text-slate-500 dark:text-slate-400">Project Title:</span>
                 <strong className="text-slate-900 dark:text-white text-right">{formData.title}</strong>
               </div>
-              <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
-                <span className="text-slate-500">Service Category:</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-white/5 pb-2">
+                <span className="text-slate-500 dark:text-slate-400">Service Category:</span>
                 <span className="font-semibold text-slate-900 dark:text-white">{services.find(s => s.id === formData.service_id)?.name}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-2 font-mono tabular-nums">
-                <span className="text-slate-500 font-sans">Total Budget:</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-white/5 pb-2 font-mono tabular-nums">
+                <span className="text-slate-500 dark:text-slate-400 font-sans">Total Budget:</span>
                 <strong className="text-emerald-600 dark:text-emerald-400 font-bold">${formData.budget.toFixed(2)}</strong>
               </div>
-              <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
-                <span className="text-slate-500">Target Deadline:</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-white/5 pb-2">
+                <span className="text-slate-500 dark:text-slate-400">Target Deadline:</span>
                 <span className="font-mono">{formData.deadline}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Configured Milestones:</span>
+                <span className="text-slate-500 dark:text-slate-400">Configured Milestones:</span>
                 <span className="font-mono">{formData.milestones.length} tranches</span>
               </div>
             </div>
@@ -351,12 +351,12 @@ export const ProjectCreationWizard: React.FC = () => {
         )}
 
         {/* Buttons Footer */}
-        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
           {step > 1 ? (
             <button
               type="button"
               onClick={() => setStep(step - 1)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 flex items-center gap-1.5"
+              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -368,7 +368,7 @@ export const ProjectCreationWizard: React.FC = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all"
+                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4 h-4" />
@@ -378,7 +378,7 @@ export const ProjectCreationWizard: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={() => handleSubmit(false)}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition-all"
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2 transition-all"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>{loading ? 'Publishing Project to MySQL...' : 'Publish Project to Marketplace'}</span>

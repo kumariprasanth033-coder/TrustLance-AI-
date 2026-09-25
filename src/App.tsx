@@ -29,7 +29,9 @@ import { FAQPage } from './pages/FAQPage';
 
 export default function App() {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('trustlance_theme') === 'dark';
+    const saved = localStorage.getItem('trustlance_theme');
+    if (saved) return saved === 'dark';
+    return true; // Default to dark-first theme per design guidelines
   });
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+      <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#0B1020] text-slate-900 dark:text-[#F8FAFC] transition-colors duration-200">
         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <main className="flex-1">

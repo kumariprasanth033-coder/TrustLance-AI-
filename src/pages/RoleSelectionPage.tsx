@@ -1,62 +1,71 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, UserCheck, Shield, Check, ArrowRight, Lock } from 'lucide-react';
+import { Briefcase, UserCheck, Shield, Check, ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const RoleSelectionPage: React.FC = () => {
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto w-full text-center mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-4 border border-blue-100 dark:border-blue-900/50">
-          <Shield className="w-3.5 h-3.5" />
-          <span>Role-Based Onboarding</span>
+    <div className="min-h-[85vh] flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background ambient glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 dark:bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 left-1/3 -translate-x-1/2 w-80 h-80 bg-purple-500/10 dark:bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-3xl mx-auto w-full text-center mb-12 relative z-10">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-4 border border-blue-500/20">
+          <Shield className="w-3.5 h-3.5 text-blue-500" />
+          <span>Intelligent Onboarding</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Welcome to TrustLance AI
         </h1>
-        <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm max-w-lg mx-auto">
-          Choose how you want to use TrustLance AI to unlock intelligent escrow and verified talent matching.
+        <p className="mt-4 text-slate-600 dark:text-slate-300 text-base max-w-xl mx-auto font-medium">
+          Choose how you want to use TrustLance AI.
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
         
         {/* Customer Onboarding Card */}
-        <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-blue-600 dark:hover:border-blue-500 rounded-2xl p-8 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between group hover:border-blue-500/50">
           <div>
-            <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <Briefcase className="w-6 h-6" />
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                <Briefcase className="w-7 h-7" />
+              </div>
+              <span className="text-[11px] font-mono uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
+                CUSTOMER
+              </span>
             </div>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-              I Want to Hire Talent (Customer)
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+              I Want to Hire
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-              Post projects, compare AI-matched proposals, and fund work through secure milestone escrow.
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+              Post projects, find trusted talent, and manage your work securely.
             </p>
 
-            <ul className="space-y-3 text-xs text-slate-700 dark:text-slate-300 mb-8">
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Post projects with custom milestone breakdowns</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>AI compatibility matching & ranking</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>100% intelligent escrow capital protection</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Structured deliverable reviews & revisions</span>
-              </li>
-            </ul>
+            <div className="space-y-3.5 text-xs text-slate-700 dark:text-slate-200 mb-8 font-medium border-t border-slate-100 dark:border-white/5 pt-6">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 font-bold" />
+                <span>Post projects with milestone escrow protection</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 font-bold" />
+                <span>AI compatibility matching & mathematical ranking</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 font-bold" />
+                <span>100% capital safe: release funds only upon approval</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 font-bold" />
+                <span>AI Broker automated milestone verification</span>
+              </div>
+            </div>
           </div>
 
           <Link
             to="/register?role=customer"
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-3.5 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:gap-3"
           >
             <span>Join as Customer</span>
             <ArrowRight className="w-4 h-4" />
@@ -64,42 +73,47 @@ export const RoleSelectionPage: React.FC = () => {
         </div>
 
         {/* Freelancer Onboarding Card */}
-        <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-indigo-600 dark:hover:border-indigo-500 rounded-2xl p-8 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between group hover:border-purple-500/50">
           <div>
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <UserCheck className="w-6 h-6" />
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform">
+                <UserCheck className="w-7 h-7" />
+              </div>
+              <span className="text-[11px] font-mono uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50">
+                FREELANCER
+              </span>
             </div>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-              I Want to Work (Freelancer)
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+              I Want to Work
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-              Find verified projects, submit AI-evaluated proposals, build your Trust Score, and get paid safely.
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+              Find projects, showcase your skills, and build your trusted reputation.
             </p>
 
-            <ul className="space-y-3 text-xs text-slate-700 dark:text-slate-300 mb-8">
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-indigo-500 shrink-0" />
-                <span>Browse live MySQL marketplace projects</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-indigo-500 shrink-0" />
-                <span>Submit competitive proposals & milestones</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-indigo-500 shrink-0" />
-                <span>Build a mathematical AI Trust Score (0–100)</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-indigo-500 shrink-0" />
-                <span>Guaranteed payout on client approval</span>
-              </li>
-            </ul>
+            <div className="space-y-3.5 text-xs text-slate-700 dark:text-slate-200 mb-8 font-medium border-t border-slate-100 dark:border-white/5 pt-6">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 font-bold" />
+                <span>Browse live verified projects across 16 categories</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 font-bold" />
+                <span>Submit structured milestone proposals</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 font-bold" />
+                <span>Build an unforgeable AI Trust Score (0–100)</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 font-bold" />
+                <span>Guaranteed payments with ACID escrow vault locks</span>
+              </div>
+            </div>
           </div>
 
           <Link
             to="/register?role=freelancer"
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:gap-3"
           >
             <span>Join as Freelancer</span>
             <ArrowRight className="w-4 h-4" />
@@ -108,8 +122,8 @@ export const RoleSelectionPage: React.FC = () => {
 
       </div>
 
-      {/* Admin Login Notice */}
-      <div className="mt-8 text-center text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
+      {/* Admin Portal notice */}
+      <div className="mt-12 text-center text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2 relative z-10">
         <Lock className="w-3.5 h-3.5" />
         <span>Platform Administrator?</span>
         <Link to="/admin/login" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline">

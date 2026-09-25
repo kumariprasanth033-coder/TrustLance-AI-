@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, ShieldCheck, Clock, CheckCircle2, ChevronLeft, ArrowRight, DollarSign, Award, MessageSquare } from 'lucide-react';
 import { freelancersApi } from '../services/api';
-import { TrustScoreRing } from '../components/TrustScoreRing';
+import { TrustScoreRing, AITrustScoreCard } from '../components/TrustScoreRing';
 
 export const FreelancerProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,17 +15,21 @@ export const FreelancerProfilePage: React.FC = () => {
   }, [id]);
 
   if (!freelancer) {
-    return <div className="max-w-7xl mx-auto px-4 py-20 text-center text-xs text-slate-500">Loading verified talent profile...</div>;
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-24 text-center text-xs text-slate-500 font-medium">
+        Loading verified talent profile...
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       {/* Breadcrumb */}
       <div>
         <Link
           to="/freelancers"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Talent Directory</span>
@@ -33,19 +37,19 @@ export const FreelancerProfilePage: React.FC = () => {
       </div>
 
       {/* Main Profile Header Card */}
-      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <img
             src={freelancer.avatar_url}
             alt={freelancer.full_name}
-            className="w-24 h-24 rounded-2xl object-cover border-2 border-slate-200 dark:border-slate-700 shadow-sm"
+            className="w-24 h-24 rounded-2xl object-cover border-2 border-slate-200 dark:border-white/10 shadow-md"
           />
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 {freelancer.full_name}
               </h1>
-              <span className="p-1 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400" title="Identity & Skills Verified">
+              <span className="p-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20" title="Identity & Skills Verified">
                 <ShieldCheck className="w-4 h-4" />
               </span>
             </div>
@@ -57,30 +61,30 @@ export const FreelancerProfilePage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4 text-xs tabular-nums font-mono text-slate-600 dark:text-slate-400">
               <span className="flex items-center gap-1 text-amber-500 font-bold font-sans">
                 <Star className="w-3.5 h-3.5 fill-amber-400" />
-                {freelancer.rating} ({freelancer.review_count} client reviews)
+                {freelancer.rating} ({freelancer.review_count} reviews)
               </span>
               <span>·</span>
               <span>{freelancer.completed_projects} Projects Completed</span>
               <span>·</span>
-              <span className="text-emerald-600 font-bold">{freelancer.on_time_delivery_rate}% On-Time</span>
+              <span className="text-emerald-500 font-bold">{freelancer.on_time_delivery_rate}% On-Time</span>
             </div>
           </div>
         </div>
 
         {/* Right side: Trust Score & Actions */}
         <div className="flex items-center gap-6 border-t lg:border-t-0 pt-6 lg:pt-0 w-full lg:w-auto justify-between lg:justify-end">
-          <TrustScoreRing score={freelancer.trust_score} size={90} strokeWidth={7} />
+          <TrustScoreRing score={freelancer.trust_score} size={88} strokeWidth={7} />
           
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Link
               to="/customer/projects/create"
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all whitespace-nowrap"
             >
-              <span>Invite to Project</span>
+              <span>Hire / Invite</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
 
-            <span className="block text-center text-xs font-mono tabular-nums text-slate-500">
+            <span className="block text-center text-xs font-mono tabular-nums text-slate-500 dark:text-slate-400">
               Rate: <strong className="text-slate-900 dark:text-white text-sm">${freelancer.hourly_rate}/hr</strong>
             </span>
           </div>
@@ -92,7 +96,7 @@ export const FreelancerProfilePage: React.FC = () => {
         
         {/* Left Column: Biography & Skills */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <div className="p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg">
             <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">
               About Professional Experience
             </h3>
@@ -107,7 +111,7 @@ export const FreelancerProfilePage: React.FC = () => {
               {freelancer.skills?.map((sk: any, i: number) => (
                 <div
                   key={i}
-                  className="px-3 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 flex items-center gap-1.5"
+                  className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-800 dark:text-slate-200 flex items-center gap-1.5"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
                   <span>{sk.name}</span>
@@ -118,7 +122,7 @@ export const FreelancerProfilePage: React.FC = () => {
           </div>
 
           {/* Client Reviews Section */}
-          <div className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <div className="p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg">
             <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">
               Verified Client Reviews ({freelancer.reviews?.length || 0})
             </h3>
@@ -126,10 +130,10 @@ export const FreelancerProfilePage: React.FC = () => {
             {freelancer.reviews && freelancer.reviews.length > 0 ? (
               <div className="space-y-4">
                 {freelancer.reviews.map((rev: any) => (
-                  <div key={rev.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+                  <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <img src={rev.reviewer_avatar} alt={rev.reviewer_name} className="w-7 h-7 rounded-full object-cover" />
+                      <div className="flex items-center gap-2.5">
+                        <img src={rev.reviewer_avatar} alt={rev.reviewer_name} className="w-7 h-7 rounded-full object-cover border border-slate-200 dark:border-white/10" />
                         <span className="text-xs font-bold text-slate-900 dark:text-white">{rev.reviewer_name}</span>
                       </div>
                       <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
@@ -137,7 +141,7 @@ export const FreelancerProfilePage: React.FC = () => {
                         <span>{rev.rating}</span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
                       "{rev.comment}"
                     </p>
                   </div>
@@ -149,73 +153,24 @@ export const FreelancerProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: AI Trust Score Radar Breakdown */}
+        {/* Right Column: AI Trust Score & Escrow Guarantee */}
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-slate-900 text-white shadow-sm space-y-4">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400 block">
-              Verified Algorithmic Breakdown
-            </span>
-            <h3 className="font-bold text-lg text-white">
-              AI Trust Score Metrics
-            </h3>
-            
-            <div className="space-y-3 text-xs pt-2 font-mono tabular-nums">
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-400">On-Time Delivery (20%)</span>
-                  <span className="font-bold text-emerald-400">{freelancer.on_time_delivery_rate}%</span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${freelancer.on_time_delivery_rate}%` }} />
-                </div>
-              </div>
+          <AITrustScoreCard
+            score={freelancer.trust_score}
+            rating={freelancer.rating}
+            completionRate={99}
+            onTimeDeliveryRate={freelancer.on_time_delivery_rate}
+            responseRate={96}
+            freelancerName={freelancer.full_name}
+          />
 
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-400">Client Ratings (30%)</span>
-                  <span className="font-bold text-blue-400">{freelancer.rating} / 5.0</span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(freelancer.rating / 5) * 100}%` }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-400">Completion Integrity (25%)</span>
-                  <span className="font-bold text-indigo-400">100%</span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-500 rounded-full" style={{ width: '100%' }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-400">Response Latency (15%)</span>
-                  <span className="font-bold text-cyan-400">{freelancer.response_time_hours} hrs</span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-500 rounded-full" style={{ width: '95%' }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-400">Dispute Penalty</span>
-                  <span className="font-bold text-emerald-400">0.0 (None)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3">
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 text-xs space-y-3 shadow-lg">
             <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <ShieldCheck className="w-4 h-4 text-blue-500" />
               <span>Escrow Protection Guarantee</span>
             </h4>
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-[11px]">
-              Hiring Elena Vance is governed by TrustLance AI Escrow. Your payment is held safely until you review and approve each deliverable tranche.
+              Hiring {freelancer.full_name} is governed by TrustLance AI Escrow. Your payment is held safely until you review and approve each deliverable tranche.
             </p>
           </div>
         </div>

@@ -40,7 +40,7 @@ export const ServiceDetailPage: React.FC = () => {
       </div>
 
       {/* Hero Service Banner */}
-      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-3 max-w-2xl">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <span>{service.category}</span>
@@ -64,7 +64,7 @@ export const ServiceDetailPage: React.FC = () => {
               <span>Delivery Time: <strong className="text-slate-900 dark:text-white">~{service.delivery_days} days</strong></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-indigo-500" />
+              <ShieldCheck className="w-4 h-4 text-purple-500" />
               <span>Escrow Protection: <strong className="text-slate-900 dark:text-white">Enabled</strong></span>
             </div>
           </div>
@@ -73,7 +73,7 @@ export const ServiceDetailPage: React.FC = () => {
         <div>
           <Link
             to={`/customer/projects/create?service_id=${service.id}`}
-            className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition-all whitespace-nowrap"
+            className="px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2 transition-all whitespace-nowrap"
           >
             <Sparkles className="w-4 h-4" />
             <span>Post a Project in This Service</span>
@@ -96,7 +96,7 @@ export const ServiceDetailPage: React.FC = () => {
           {freelancers.slice(0, 3).map((f) => (
             <div
               key={f.id}
-              className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between"
+              className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between mb-4">
@@ -104,7 +104,7 @@ export const ServiceDetailPage: React.FC = () => {
                     <img
                       src={f.avatar_url}
                       alt={f.full_name}
-                      className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                      className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-white/10"
                     />
                     <div>
                       <h4 className="font-bold text-slate-900 dark:text-white text-sm">{f.full_name}</h4>
@@ -120,18 +120,18 @@ export const ServiceDetailPage: React.FC = () => {
 
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {f.skills?.slice(0, 3).map((sk: any, i: number) => (
-                    <span key={i} className="text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono">
+                    <span key={i} className="text-[11px] px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-mono border border-slate-200/50 dark:border-white/5">
                       {sk.name}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-900 dark:text-white tabular-nums">${f.hourly_rate}/hr</span>
                 <Link
                   to={`/freelancers/${f.id}`}
-                  className="font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-500 flex items-center gap-1"
                 >
                   <span>View Profile</span>
                   <ArrowRight className="w-3.5 h-3.5" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, Shield, CheckCircle2 } from 'lucide-react';
+import { HelpCircle, Shield, CheckCircle2, Sparkles } from 'lucide-react';
 
 export const FAQPage: React.FC = () => {
   const faqs = [
@@ -27,14 +27,15 @@ export const FAQPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-      <div className="text-center space-y-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
+      <div className="text-center space-y-3">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-500/10 px-3.5 py-1.5 rounded-full border border-blue-500/20">
+          <Sparkles className="w-3.5 h-3.5 text-purple-500" />
           Knowledge Base & Help
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Frequently Asked Questions
         </h1>
-        <p className="text-xs text-slate-500 max-w-xl mx-auto">
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl mx-auto font-medium">
           Everything you need to know about TrustLance AI architecture, escrow guarantees, and AI Trust Scores.
         </p>
       </div>
@@ -43,13 +44,13 @@ export const FAQPage: React.FC = () => {
         {faqs.map((faq, i) => (
           <div
             key={i}
-            className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2"
+            className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg space-y-2.5 transition-all hover:border-blue-500/30"
           >
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-blue-600 shrink-0" />
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2.5">
+              <HelpCircle className="w-4 h-4 text-blue-500 shrink-0" />
               <span>{faq.q}</span>
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 leading-relaxed pl-6">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed pl-6.5 font-normal">
               {faq.a}
             </p>
           </div>
@@ -58,3 +59,4 @@ export const FAQPage: React.FC = () => {
     </div>
   );
 };
+

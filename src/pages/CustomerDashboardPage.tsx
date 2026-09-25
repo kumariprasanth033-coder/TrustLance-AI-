@@ -34,7 +34,7 @@ export const CustomerDashboardPage: React.FC = () => {
 
         <Link
           to="/customer/projects/create"
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all shrink-0"
+          className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Post a Project</span>
@@ -43,85 +43,85 @@ export const CustomerDashboardPage: React.FC = () => {
 
       {/* Statistics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 block uppercase">Active Projects</span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md hover:border-blue-500/40 transition-all">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Active Projects</span>
+          <div className="mt-2.5 flex items-baseline gap-2">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
               {activeProjects.length}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">in progress</span>
+            <span className="text-[11px] text-blue-500 font-semibold">in progress</span>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 block uppercase">Escrow Held</span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 tabular-nums font-mono">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md hover:border-blue-500/40 transition-all">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Escrow Held</span>
+          <div className="mt-2.5 flex items-baseline gap-2">
+            <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 tabular-nums font-mono">
               ${totalEscrowHeld.toFixed(2)}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">secured in vault</span>
+            <span className="text-[11px] text-emerald-500 font-semibold">vault locked</span>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 block uppercase">Completed Work</span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums font-mono">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md hover:border-blue-500/40 transition-all">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Completed Work</span>
+          <div className="mt-2.5 flex items-baseline gap-2">
+            <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums font-mono">
               {completedProjects.length}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">contracts approved</span>
+            <span className="text-[11px] text-slate-500 font-semibold">contracts closed</span>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 block uppercase">Customer Trust Score</span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md hover:border-blue-500/40 transition-all">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Client Trust Score</span>
+          <div className="mt-2.5 flex items-baseline gap-2">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
               96.5
             </span>
-            <span className="text-[11px] text-emerald-600 font-medium">Prompt Payer</span>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Prompt Payer</span>
           </div>
         </div>
       </div>
 
       {/* Active Projects List */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
           <div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">Active Projects & Workspaces</h3>
-            <p className="text-xs text-slate-500">Inspect milestones, deliverables, and escrow states.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Inspect milestones, deliverables, and escrow states.</p>
           </div>
         </div>
 
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="divide-y divide-slate-100 dark:divide-white/5">
           {projects.map((proj) => (
             <div key={proj.id} className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <strong className="text-sm text-slate-900 dark:text-white">{proj.title}</strong>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
-                    proj.status === 'in_progress' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400' :
-                    proj.status === 'completed' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' :
-                    proj.status === 'under_review' ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400' :
-                    'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400'
+                  <strong className="text-sm font-bold text-slate-900 dark:text-white">{proj.title}</strong>
+                  <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full ${
+                    proj.status === 'in_progress' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20' :
+                    proj.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' :
+                    proj.status === 'under_review' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20' :
+                    'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
                   }`}>
                     {proj.status.replace('_', ' ')}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-4 text-slate-500 text-[11px] font-mono tabular-nums">
-                  <span>Budget: ${proj.budget.toFixed(2)}</span>
+                <div className="flex flex-wrap items-center gap-4 text-slate-500 dark:text-slate-400 text-[11px] font-mono tabular-nums">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">Budget: ${proj.budget.toFixed(2)}</span>
                   <span>·</span>
                   <span>Deadline: {proj.deadline}</span>
                   {proj.hired_freelancer_name && (
                     <>
                       <span>·</span>
-                      <span>Talent: <strong className="text-blue-600 font-sans">{proj.hired_freelancer_name}</strong></span>
+                      <span>Talent: <strong className="text-blue-600 dark:text-blue-400 font-sans font-semibold">{proj.hired_freelancer_name}</strong></span>
                     </>
                   )}
                   {proj.proposal_count !== undefined && proj.status === 'open' && (
                     <>
                       <span>·</span>
-                      <span className="text-emerald-600 font-bold">{proj.proposal_count} proposals</span>
+                      <span className="text-emerald-500 font-bold">{proj.proposal_count} proposals</span>
                     </>
                   )}
                 </div>
@@ -129,7 +129,7 @@ export const CustomerDashboardPage: React.FC = () => {
 
               <Link
                 to={`/customer/projects/${proj.id}`}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl flex items-center gap-1.5 transition-colors whitespace-nowrap"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-slate-100 font-bold rounded-xl flex items-center gap-1.5 transition-colors whitespace-nowrap border border-slate-200 dark:border-white/10"
               >
                 <span>Enter Workspace</span>
                 <ChevronRight className="w-3.5 h-3.5" />

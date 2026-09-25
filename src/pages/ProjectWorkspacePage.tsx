@@ -267,36 +267,36 @@ export const ProjectWorkspacePage: React.FC = () => {
       </div>
 
       {/* Project Workspace Header Card */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <div className="space-y-2 max-w-3xl">
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-            <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded uppercase">
+            <span className="text-[11px] font-bold text-blue-700 dark:text-blue-400 bg-blue-100/80 dark:bg-blue-950/60 px-2.5 py-0.5 rounded uppercase border border-blue-200/60 dark:border-blue-900">
               {project.service_name || 'Service Contract'}
             </span>
             <span className="text-slate-400">·</span>
-            <span className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded ${
-              project.status === 'in_progress' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400' :
-              project.status === 'completed' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' :
-              project.status === 'under_review' ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400' :
-              project.status === 'disputed' ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400' :
-              'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400'
+            <span className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded border ${
+              project.status === 'in_progress' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200/60' :
+              project.status === 'completed' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200/60' :
+              project.status === 'under_review' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-400 border-purple-200/60' :
+              project.status === 'disputed' ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200/60' :
+              'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200/60'
             }`}>
               {project.status.replace('_', ' ')}
             </span>
             <span className="text-slate-400">·</span>
-            <span className="text-slate-500">ID #{project.id}</span>
+            <span className="text-slate-600 dark:text-slate-400 font-semibold">ID #{project.id}</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {project.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs tabular-nums font-mono text-slate-500 pt-1">
-            <span>Budget: <strong className="text-slate-900 dark:text-white">${project.budget.toFixed(2)}</strong></span>
-            <span>Target Deadline: <strong className="text-slate-900 dark:text-white">{project.deadline}</strong></span>
-            <span>Customer: <strong className="text-slate-900 dark:text-white font-sans">{project.customer_name}</strong></span>
+          <div className="flex flex-wrap items-center gap-6 text-xs tabular-nums font-mono text-slate-600 dark:text-slate-400 pt-1 font-medium">
+            <span>Budget: <strong className="text-slate-900 dark:text-white font-bold">${project.budget.toFixed(2)}</strong></span>
+            <span>Target Deadline: <strong className="text-slate-900 dark:text-white font-bold">{project.deadline}</strong></span>
+            <span>Customer: <strong className="text-slate-900 dark:text-white font-sans font-bold">{project.customer_name}</strong></span>
             {project.hired_freelancer_name && (
-              <span>Hired: <strong className="text-blue-600 dark:text-blue-400 font-sans">{project.hired_freelancer_name}</strong></span>
+              <span>Hired: <strong className="text-blue-600 dark:text-blue-400 font-sans font-bold">{project.hired_freelancer_name}</strong></span>
             )}
           </div>
         </div>
@@ -307,7 +307,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'open' && isFreelancer && (
             <button
               onClick={() => setShowProposalModal(true)}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               <span>Submit Proposal</span>
@@ -329,7 +329,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'in_progress' && isFreelancer && (
             <button
               onClick={() => setShowDeliverModal(true)}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
             >
               <Upload className="w-4 h-4" />
               <span>Submit Deliverable</span>
@@ -340,7 +340,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'completed' && isCustomer && (
             <button
               onClick={() => setShowReviewModal(true)}
-              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
             >
               <Star className="w-4 h-4 fill-white/20" />
               <span>Submit Freelancer Review</span>
@@ -351,7 +351,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {['in_progress', 'under_review'].includes(project.status) && (
             <button
               onClick={() => setShowDisputeModal(true)}
-              className="px-3.5 py-2 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-rose-600 text-xs font-medium rounded-xl transition-colors"
+              className="px-3.5 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-rose-600 text-xs font-semibold rounded-xl transition-colors bg-white dark:bg-slate-800 shadow-2xs"
             >
               Open Dispute
             </button>
@@ -367,11 +367,11 @@ export const ProjectWorkspacePage: React.FC = () => {
       />
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 text-xs font-semibold overflow-x-auto scrollbar-none">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 text-xs font-bold overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab('overview')}
           className={`py-3 px-4 border-b-2 transition-colors ${
-            activeTab === 'overview' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'overview' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white'
           }`}
         >
           Overview & Scope
@@ -379,7 +379,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         <button
           onClick={() => setActiveTab('milestones')}
           className={`py-3 px-4 border-b-2 transition-colors ${
-            activeTab === 'milestones' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'milestones' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white'
           }`}
         >
           Milestones ({data.milestones?.length || 0})
@@ -387,7 +387,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         <button
           onClick={() => setActiveTab('deliverables')}
           className={`py-3 px-4 border-b-2 transition-colors ${
-            activeTab === 'deliverables' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'deliverables' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white'
           }`}
         >
           Deliverables ({data.deliverables?.length || 0})
@@ -395,7 +395,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         <button
           onClick={() => setActiveTab('escrow')}
           className={`py-3 px-4 border-b-2 transition-colors ${
-            activeTab === 'escrow' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'escrow' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white'
           }`}
         >
           Escrow Ledger & Receipts
@@ -403,7 +403,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         <button
           onClick={() => setActiveTab('messages')}
           className={`py-3 px-4 border-b-2 transition-colors ${
-            activeTab === 'messages' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'messages' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white'
           }`}
         >
           Workspace Chat ({messages.length})
@@ -416,16 +416,16 @@ export const ProjectWorkspacePage: React.FC = () => {
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
               <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-3">Project Description</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line font-medium">
                 {project.description}
               </p>
 
               {project.requirements && (
                 <>
                   <h4 className="font-bold text-xs text-slate-900 dark:text-white mt-6 mb-2">Technical Specifications</h4>
-                  <pre className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 font-mono text-[11px] text-slate-800 dark:text-slate-200 whitespace-pre-line border border-slate-200 dark:border-slate-700">
+                  <pre className="p-4 rounded-xl bg-slate-100/70 dark:bg-slate-800/80 font-mono text-[11px] text-slate-800 dark:text-slate-200 whitespace-pre-line border border-slate-200 dark:border-slate-700">
                     {project.requirements}
                   </pre>
                 </>
@@ -434,27 +434,27 @@ export const ProjectWorkspacePage: React.FC = () => {
 
             {/* Proposals Received (if project is open) */}
             {data.proposals && data.proposals.length > 0 && (
-              <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+              <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
                 <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-4">
                   Proposals Received ({data.proposals.length})
                 </h3>
 
                 <div className="space-y-4">
                   {data.proposals.map((pr: any) => (
-                    <div key={pr.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between gap-4 text-xs">
+                    <div key={pr.id} className="p-4 rounded-xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between gap-4 text-xs shadow-2xs">
                       <div className="space-y-2 flex-1">
                         <div className="flex items-center gap-3">
-                          <img src={pr.freelancer_avatar} alt={pr.freelancer_name} className="w-8 h-8 rounded-full object-cover" />
+                          <img src={pr.freelancer_avatar} alt={pr.freelancer_name} className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700" />
                           <div>
-                            <strong className="text-slate-900 dark:text-white block">{pr.freelancer_name}</strong>
-                            <span className="text-[11px] text-slate-500">{pr.headline}</span>
+                            <strong className="text-slate-900 dark:text-white block font-bold">{pr.freelancer_name}</strong>
+                            <span className="text-[11px] text-slate-600 dark:text-slate-400">{pr.headline}</span>
                           </div>
-                          <span className="ml-auto sm:ml-2 px-2 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-bold text-[10px]">
+                          <span className="ml-auto sm:ml-2 px-2.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 font-bold text-[10px] border border-blue-200/60 dark:border-blue-800">
                             {pr.ai_match_score}% AI Match
                           </span>
                         </div>
 
-                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px]">
+                        <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
                           "{pr.cover_letter}"
                         </p>
                       </div>
@@ -467,14 +467,14 @@ export const ProjectWorkspacePage: React.FC = () => {
                         {project.status === 'open' && isCustomer && pr.status === 'pending' && (
                           <button
                             onClick={() => handleAcceptProposal(pr.id)}
-                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs"
+                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-2xs transition-colors"
                           >
                             Accept & Hire
                           </button>
                         )}
 
                         {pr.status === 'accepted' && (
-                          <span className="text-emerald-600 font-bold text-[11px] flex items-center gap-1">
+                          <span className="text-emerald-700 dark:text-emerald-400 font-bold text-[11px] flex items-center gap-1">
                             <Check className="w-3.5 h-3.5" /> Hired
                           </span>
                         )}
@@ -488,20 +488,20 @@ export const ProjectWorkspacePage: React.FC = () => {
 
           {/* Right sidebar: Contract Details */}
           <div className="space-y-4">
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3">
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3 shadow-sm">
               <h4 className="font-bold text-slate-900 dark:text-white">Escrow Protection State</h4>
               <div className="space-y-2 tabular-nums font-mono text-[11px]">
                 <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                  <span className="text-slate-500 font-sans">Total Scope Value:</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-sans">Total Scope Value:</span>
                   <strong className="text-slate-900 dark:text-white">${project.budget.toFixed(2)}</strong>
                 </div>
                 <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                  <span className="text-slate-500 font-sans">Held in Escrow:</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-sans">Held in Escrow:</span>
                   <strong className="text-blue-600 dark:text-blue-400">${(data.escrow?.held_amount || 0).toFixed(2)}</strong>
                 </div>
                 <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                  <span className="text-slate-500 font-sans">Released Tranches:</span>
-                  <strong className="text-emerald-600 dark:text-emerald-400">${(data.escrow?.released_amount || 0).toFixed(2)}</strong>
+                  <span className="text-slate-600 dark:text-slate-400 font-sans">Released Tranches:</span>
+                  <strong className="text-emerald-700 dark:text-emerald-400">${(data.escrow?.released_amount || 0).toFixed(2)}</strong>
                 </div>
               </div>
             </div>
@@ -511,28 +511,28 @@ export const ProjectWorkspacePage: React.FC = () => {
 
       {/* 2. MILESTONES TAB */}
       {activeTab === 'milestones' && (
-        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between mb-2">
             <div>
               <h3 className="font-bold text-sm text-slate-900 dark:text-white">Project Milestones</h3>
-              <p className="text-xs text-slate-500">Each milestone is independently verified and approved.</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Each milestone is independently verified and approved.</p>
             </div>
           </div>
 
           <div className="space-y-3">
             {data.milestones?.map((m: any) => (
-              <div key={m.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+              <div key={m.id} className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs shadow-2xs">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 text-[10px] font-bold flex items-center justify-center">
                       {m.order_index}
                     </span>
                     <strong className="text-slate-900 dark:text-white text-xs">{m.title}</strong>
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold">
                       {m.status.replace('_', ' ')}
                     </span>
                   </div>
-                  <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-1 pl-7">
+                  <p className="text-slate-600 dark:text-slate-400 text-[11px] mt-1 pl-7 font-medium">
                     {m.description || 'Milestone scope deliverable'}
                   </p>
                 </div>
@@ -546,14 +546,14 @@ export const ProjectWorkspacePage: React.FC = () => {
                   {isCustomer && m.status === 'submitted' && (
                     <button
                       onClick={() => handleReleaseMilestone(m)}
-                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs"
+                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs shadow-2xs"
                     >
                       Approve & Release ${m.amount.toFixed(2)}
                     </button>
                   )}
 
                   {m.status === 'released' && (
-                    <span className="text-emerald-600 font-bold text-xs flex items-center gap-1">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1">
                       <CheckCircle2 className="w-4 h-4" /> Released
                     </span>
                   )}
@@ -566,16 +566,16 @@ export const ProjectWorkspacePage: React.FC = () => {
 
       {/* 3. DELIVERABLES TAB */}
       {activeTab === 'deliverables' && (
-        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between mb-2">
             <div>
               <h3 className="font-bold text-sm text-slate-900 dark:text-white">Submitted Deliverables</h3>
-              <p className="text-xs text-slate-500">Inspect code archives, design packages, and reports.</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Inspect code archives, design packages, and reports.</p>
             </div>
             {isFreelancer && project.status === 'in_progress' && (
               <button
                 onClick={() => setShowDeliverModal(true)}
-                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg"
+                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-2xs"
               >
                 + New Deliverable
               </button>
@@ -585,20 +585,20 @@ export const ProjectWorkspacePage: React.FC = () => {
           {data.deliverables && data.deliverables.length > 0 ? (
             <div className="space-y-3">
               {data.deliverables.map((deliv: any) => (
-                <div key={deliv.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                <div key={deliv.id} className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
                   <div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4 text-blue-600" />
                       <strong className="text-slate-900 dark:text-white">{deliv.title}</strong>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-semibold">
                         v{deliv.version}
                       </span>
-                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700">
+                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold">
                         {deliv.status.replace('_', ' ')}
                       </span>
                     </div>
                     {deliv.notes && (
-                      <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-1 pl-6">
+                      <p className="text-slate-600 dark:text-slate-400 text-[11px] mt-1 pl-6 font-medium">
                         {deliv.notes}
                       </p>
                     )}
@@ -629,71 +629,174 @@ export const ProjectWorkspacePage: React.FC = () => {
 
       {/* 4. ESCROW LEDGER & RECEIPTS TAB */}
       {activeTab === 'escrow' && (
-        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6 text-xs">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white">Escrow Transaction Ledger</h3>
-              <p className="text-xs text-slate-500">Immutable transaction history stored in MySQL.</p>
+        <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-6 text-xs">
+          
+          {/* Visual Security / Shield Hero Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-blue-600/5 border border-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/25 shrink-0">
+                <ShieldCheck className="w-7 h-7" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white">
+                    Escrow Protected Contract
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
+                    100% GUARANTEED
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 font-medium">
+                  Capital is locked in autonomous smart vault until milestone criteria are verified.
+                </p>
+              </div>
             </div>
+
             {isCustomer && (!data.escrow || data.escrow.held_amount === 0) && (
               <button
                 onClick={() => setShowFundModal(true)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20"
               >
                 + Fund Escrow
               </button>
             )}
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-[11px]">
-              <thead className="border-b border-slate-200 dark:border-slate-700 text-slate-400 uppercase text-[10px]">
-                <tr>
-                  <th className="py-2.5">Reference ID</th>
-                  <th className="py-2.5">Type</th>
-                  <th className="py-2.5">Amount</th>
-                  <th className="py-2.5">Status</th>
-                  <th className="py-2.5">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {data.escrow_transactions?.map((tx: any) => (
-                  <tr key={tx.id}>
-                    <td className="py-2.5 text-blue-600 font-bold">{tx.reference_id}</td>
-                    <td className="py-2.5 uppercase">{tx.type}</td>
-                    <td className="py-2.5 tabular-nums font-bold">${tx.amount.toFixed(2)}</td>
-                    <td className="py-2.5 text-emerald-600 font-semibold">{tx.status}</td>
-                    <td className="py-2.5 text-slate-400 font-sans text-[10px]">{new Date(tx.created_at).toLocaleString()}</td>
+          {/* Key Escrow Metadata Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5">
+              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+                Amount Held
+              </span>
+              <span className="text-base font-extrabold text-blue-600 dark:text-blue-400 font-mono tabular-nums mt-1 block">
+                ${data.escrow?.held_amount ? data.escrow.held_amount.toFixed(2) : '0.00'}
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5">
+              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+                Project
+              </span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white truncate mt-1 block">
+                {data.project.title}
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5">
+              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+                Freelancer
+              </span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white truncate mt-1 block">
+                {data.project.freelancer_name || 'Assigned Talent'}
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5">
+              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+                Escrow Status
+              </span>
+              <div className="mt-1">
+                {(() => {
+                  const status = data.escrow?.status || data.project.status;
+                  if (status === 'payment_held' || status === 'open') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 uppercase">PAYMENT HELD</span>;
+                  }
+                  if (status === 'in_progress') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 uppercase">IN PROGRESS</span>;
+                  }
+                  if (status === 'under_review') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 uppercase">UNDER REVIEW</span>;
+                  }
+                  if (status === 'completed' || status === 'released') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 uppercase">RELEASED</span>;
+                  }
+                  if (status === 'refunded') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 uppercase">REFUNDED</span>;
+                  }
+                  if (status === 'disputed') {
+                    return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 uppercase">DISPUTED</span>;
+                  }
+                  return <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 uppercase">PAYMENT HELD</span>;
+                })()}
+              </div>
+            </div>
+          </div>
+
+          {/* Transaction Ledger Table */}
+          <div className="pt-2">
+            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+              Immutable Escrow Ledger
+            </h4>
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10">
+              <table className="w-full text-left font-mono text-[11px]">
+                <thead className="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-semibold">
+                  <tr>
+                    <th className="py-3 px-4">Transaction ID</th>
+                    <th className="py-3 px-4">Type</th>
+                    <th className="py-3 px-4">Amount</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">Timestamp</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                  {data.escrow_transactions && data.escrow_transactions.length > 0 ? (
+                    data.escrow_transactions.map((tx: any) => (
+                      <tr key={tx.id} className="hover:bg-slate-50/50 dark:hover:bg-white/5">
+                        <td className="py-3 px-4 text-blue-600 dark:text-blue-400 font-bold">{tx.reference_id}</td>
+                        <td className="py-3 px-4 uppercase font-medium">{tx.type}</td>
+                        <td className="py-3 px-4 tabular-nums font-bold text-slate-900 dark:text-white">${tx.amount.toFixed(2)}</td>
+                        <td className="py-3 px-4">
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            tx.status === 'completed' || tx.status === 'released'
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                              : tx.status === 'refunded'
+                              ? 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400'
+                              : tx.status === 'disputed'
+                              ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                              : 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                          }`}>
+                            {tx.status.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400 font-sans text-[10px]">{new Date(tx.created_at).toLocaleString()}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-4 px-4 text-center text-slate-400">
+                        No transactions recorded yet in ledger.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       {/* 5. WORKSPACE CHAT TAB */}
       {activeTab === 'messages' && (
-        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col h-[500px]">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-[500px]">
           <div className="border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
             <h3 className="font-bold text-sm text-slate-900 dark:text-white">Workspace Communication</h3>
-            <p className="text-xs text-slate-500">Secure project discussion recorded in MySQL.</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Secure project discussion recorded in MySQL.</p>
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-3 pr-2">
             {messages.map((m: any) => (
-              <div key={m.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 text-xs">
+              <div key={m.id} className="p-3.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs shadow-2xs">
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
                     <img src={m.sender_avatar} alt={m.sender_name} className="w-5 h-5 rounded-full object-cover" />
-                    <strong className="text-slate-900 dark:text-white">{m.sender_name}</strong>
-                    <span className="text-[10px] text-slate-400 uppercase font-mono">({m.sender_role})</span>
+                    <strong className="text-slate-900 dark:text-white font-semibold">{m.sender_name}</strong>
+                    <span className="text-[10px] text-slate-500 uppercase font-mono">({m.sender_role})</span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] text-slate-500 font-mono">
                     {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 pl-7">{m.message_text}</p>
+                <p className="text-slate-700 dark:text-slate-300 pl-7 font-medium">{m.message_text}</p>
               </div>
             ))}
           </div>
@@ -704,11 +807,11 @@ export const ProjectWorkspacePage: React.FC = () => {
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               placeholder="Type message to collaborator..."
-              className="flex-1 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-blue-500"
+              className="flex-1 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all shadow-2xs font-medium"
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Send</span>
