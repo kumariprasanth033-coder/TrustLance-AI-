@@ -1,0 +1,8 @@
+{
+  "name": "TrustLance AI",
+  "description": "Hire With Confidence. Work With Trust. Next-generation full-stack freelancing platform powered by AI matching, verifiable trust scores, and intelligent escrow protection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
