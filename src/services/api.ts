@@ -18,11 +18,19 @@ import {
   ServiceCategory,
   Dispute,
   RiskAlert,
-  AIScoreBreakdown
+  AIScoreBreakdown,
+  EscrowState,
+  RefundRecord,
+  RevisionRecord,
+  ActivityLog,
+  AIBrokerAnalysis,
+  TestResultItem
 } from '../types';
 
 // Default XAMPP backend URL
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/TrustLance-AI/backend/api';
+export const API_BASE_URL =
+  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_API_URL) ||
+  'http://localhost/TrustLance-AI/backend/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -282,6 +290,120 @@ const INITIAL_REVIEWS: Review[] = [
   { id: 1, project_id: 4, reviewer_id: 1, reviewee_id: 7, rating: 4.8, comment: 'David performed an exemplary penetration test on our endpoints. Detailed vulnerability matrix and actionable remediations provided ahead of schedule.', created_at: '2026-09-18T16:00:00Z', reviewer_name: 'Sarah Jenkins', reviewer_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' }
 ];
 
+const INITIAL_REVISIONS: RevisionRecord[] = [
+  {
+    id: 1,
+    revision_id: 'REV-20260923-01',
+    project_id: 1,
+    deliverable_id: 1,
+    customer_id: 1,
+    freelancer_id: 1,
+    reason: 'Add Redis cache layer specs to architecture blueprint.',
+    requested_date: '2026-09-22T19:00:00Z',
+    status: 'APPROVED'
+  }
+];
+
+const INITIAL_REFUNDS: RefundRecord[] = [
+  {
+    id: 1,
+    refund_id: 'REF-20260915-081',
+    transaction_id: 'TX-REFUND-081',
+    project_id: 4,
+    customer_id: 1,
+    freelancer_id: 5,
+    amount: 0,
+    reason: 'Project completed successfully with zero refund needed.',
+    status: 'REFUNDED',
+    is_demo: true,
+    created_at: '2026-09-18T16:05:00Z'
+  }
+];
+
+const INITIAL_WALLETS = [
+  { user_id: 1, balance: 12500.00, pending_balance: 1600.00, total_spent: 3200.00, total_earned: 0.00 },
+  { user_id: 2, balance: 800.00, pending_balance: 1600.00, total_spent: 0.00, total_earned: 800.00 },
+  { user_id: 3, balance: 0.00, pending_balance: 0.00, total_spent: 0.00, total_earned: 0.00 },
+  { user_id: 4, balance: 1450.00, pending_balance: 0.00, total_spent: 0.00, total_earned: 1450.00 },
+  { user_id: 5, balance: 2100.00, pending_balance: 0.00, total_spent: 0.00, total_earned: 2100.00 },
+  { user_id: 6, balance: 900.00, pending_balance: 0.00, total_spent: 0.00, total_earned: 900.00 },
+  { user_id: 7, balance: 1800.00, pending_balance: 0.00, total_spent: 0.00, total_earned: 1800.00 }
+];
+
+const INITIAL_ACTIVITY_LOGS: ActivityLog[] = [
+  {
+    id: 1,
+    user_id: 1,
+    user_name: 'Sarah Jenkins',
+    role: 'customer',
+    project_id: 1,
+    project_title: 'Enterprise AI Analytics Portal with Secure Escrow',
+    action: 'FUND_ESCROW',
+    old_state: 'CREATED',
+    new_state: 'HELD',
+    reason: 'Customer funded demo escrow into TrustLance AI Vault ($2,400.00).',
+    timestamp: '2026-09-20T16:05:00Z',
+    metadata: { amount: 2400, mode: 'DEMO_ESCROW' }
+  },
+  {
+    id: 2,
+    user_id: 2,
+    user_name: 'Elena Vance',
+    role: 'freelancer',
+    project_id: 1,
+    project_title: 'Enterprise AI Analytics Portal with Secure Escrow',
+    action: 'START_WORK',
+    old_state: 'HELD',
+    new_state: 'WORK_IN_PROGRESS',
+    reason: 'Freelancer initialized project workspace and accepted requirements.',
+    timestamp: '2026-09-21T09:00:00Z'
+  },
+  {
+    id: 3,
+    user_id: 1,
+    user_name: 'Sarah Jenkins',
+    role: 'customer',
+    project_id: 1,
+    project_title: 'Enterprise AI Analytics Portal with Secure Escrow',
+    action: 'PAYMENT_RELEASED',
+    old_state: 'UNDER_REVIEW',
+    new_state: 'RELEASED',
+    reason: 'Customer approved final deliverable for Milestone 1. AI Broker executed wallet release.',
+    timestamp: '2026-09-23T11:20:00Z',
+    metadata: { tranche_amount: 800, milestone_id: 1 }
+  }
+];
+
+export const VALID_ESCROW_TRANSITIONS: Record<string, string[]> = {
+  CREATED: ['FUNDED'],
+  FUNDED: ['HELD'],
+  HELD: ['WORK_IN_PROGRESS', 'DEADLINE_MISSED'],
+  WORK_IN_PROGRESS: ['SUBMITTED', 'DEADLINE_MISSED'],
+  SUBMITTED: ['UNDER_REVIEW'],
+  UNDER_REVIEW: ['RELEASED', 'REVISION_REQUESTED', 'DISPUTED'],
+  REVISION_REQUESTED: ['RESUBMITTED'],
+  RESUBMITTED: ['UNDER_REVIEW'],
+  DEADLINE_MISSED: ['REFUND_PENDING'],
+  REFUND_PENDING: ['REFUNDED'],
+  DISPUTED: ['ADMIN_REVIEW'],
+  ADMIN_REVIEW: ['RELEASED', 'REFUNDED'],
+  RELEASED: [],
+  REFUNDED: [],
+  // Legacy compatibility mappings
+  pending_funding: ['funded_held', 'FUNDED', 'HELD'],
+  funded_held: ['partially_released', 'fully_released', 'WORK_IN_PROGRESS', 'SUBMITTED', 'UNDER_REVIEW', 'DEADLINE_MISSED', 'RELEASED'],
+  partially_released: ['partially_released', 'fully_released', 'RELEASED', 'UNDER_REVIEW'],
+  fully_released: []
+};
+
+export function validateEscrowTransition(currentStatus: string, nextStatus: string): boolean {
+  const allowed = VALID_ESCROW_TRANSITIONS[currentStatus];
+  if (!allowed || !allowed.includes(nextStatus)) {
+    throw new Error(`Invalid escrow state transition: cannot transition from "${currentStatus}" to "${nextStatus}".`);
+  }
+  return true;
+}
+
 // Helper to get or initialize localStorage store
 function getStore<T>(key: string, initial: T): T {
   try {
@@ -319,6 +441,10 @@ export function initLocalDatabase() {
   getStore('notifications', INITIAL_NOTIFICATIONS);
   getStore('disputes', INITIAL_DISPUTES);
   getStore('reviews', INITIAL_REVIEWS);
+  getStore('revisions', INITIAL_REVISIONS);
+  getStore('refunds', INITIAL_REFUNDS);
+  getStore('wallets', INITIAL_WALLETS);
+  getStore('activity_logs', INITIAL_ACTIVITY_LOGS);
 }
 
 // Reset data to factory seed
@@ -336,6 +462,10 @@ export function resetLocalDatabase() {
   localStorage.removeItem('tl_notifications');
   localStorage.removeItem('tl_disputes');
   localStorage.removeItem('tl_reviews');
+  localStorage.removeItem('tl_revisions');
+  localStorage.removeItem('tl_refunds');
+  localStorage.removeItem('tl_wallets');
+  localStorage.removeItem('tl_activity_logs');
   initLocalDatabase();
 }
 
@@ -741,8 +871,349 @@ export const proposalsApi = {
   }
 };
 
+export const auditApi = {
+  log: (entry: {
+    user_id?: number;
+    user_name?: string;
+    role?: string;
+    project_id: number;
+    project_title?: string;
+    action: string;
+    old_state: string;
+    new_state: string;
+    reason: string;
+    metadata?: any;
+  }): ActivityLog => {
+    const logs = getStore<ActivityLog[]>('activity_logs', INITIAL_ACTIVITY_LOGS);
+    const user = authApi.getCurrentUser();
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const p = projects.find(item => item.id === entry.project_id);
+
+    const newLog: ActivityLog = {
+      id: logs.length + 1,
+      user_id: entry.user_id ?? user?.id ?? 1,
+      user_name: entry.user_name ?? user?.full_name ?? 'System AI Broker',
+      role: entry.role ?? user?.role ?? 'system',
+      project_id: entry.project_id,
+      project_title: entry.project_title ?? p?.title ?? `Project #${entry.project_id}`,
+      action: entry.action,
+      old_state: entry.old_state,
+      new_state: entry.new_state,
+      reason: entry.reason,
+      timestamp: new Date().toISOString(),
+      metadata: entry.metadata
+    };
+
+    logs.unshift(newLog);
+    setStore('activity_logs', logs);
+    return newLog;
+  },
+
+  list: async (projectId?: number): Promise<ActivityLog[]> => {
+    const logs = getStore<ActivityLog[]>('activity_logs', INITIAL_ACTIVITY_LOGS);
+    if (projectId) {
+      return logs.filter(l => l.project_id === projectId);
+    }
+    return logs;
+  }
+};
+
+export const walletsApi = {
+  getByUserId: (userId: number) => {
+    const wallets = getStore<any[]>('wallets', INITIAL_WALLETS);
+    let wallet = wallets.find(w => w.user_id === userId);
+    if (!wallet) {
+      wallet = { user_id: userId, balance: 0, pending_balance: 0, total_spent: 0, total_earned: 0 };
+      wallets.push(wallet);
+      setStore('wallets', wallets);
+    }
+    return wallet;
+  },
+
+  credit: (userId: number, amount: number) => {
+    if (amount < 0) throw new Error('Credit amount cannot be negative.');
+    const wallets = getStore<any[]>('wallets', INITIAL_WALLETS);
+    let wallet = wallets.find(w => w.user_id === userId);
+    if (!wallet) {
+      wallet = { user_id: userId, balance: amount, pending_balance: 0, total_spent: 0, total_earned: amount };
+      wallets.push(wallet);
+    } else {
+      wallet.balance += amount;
+      wallet.total_earned += amount;
+    }
+    setStore('wallets', wallets);
+    return wallet;
+  },
+
+  debit: (userId: number, amount: number) => {
+    if (amount <= 0) throw new Error('Debit amount must be positive.');
+    const wallets = getStore<any[]>('wallets', INITIAL_WALLETS);
+    let wallet = wallets.find(w => w.user_id === userId);
+    if (!wallet || wallet.balance < amount) {
+      throw new Error('Insufficient wallet balance or unauthorized debit attempt.');
+    }
+    wallet.balance -= amount;
+    wallet.total_spent += amount;
+    setStore('wallets', wallets);
+    return wallet;
+  }
+};
+
+export const revisionsApi = {
+  list: async (projectId?: number): Promise<RevisionRecord[]> => {
+    const revs = getStore<RevisionRecord[]>('revisions', INITIAL_REVISIONS);
+    if (projectId) return revs.filter(r => r.project_id === projectId);
+    return revs;
+  },
+
+  requestRevision: async (deliverableId: number, reason: string): Promise<RevisionRecord> => {
+    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
+    const d = deliverables.find(item => item.id === deliverableId);
+    if (!d) throw new Error('Deliverable not found.');
+
+    const user = authApi.getCurrentUser();
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const p = projects.find(proj => proj.id === d.project_id);
+    if (!p) throw new Error('Associated project not found.');
+
+    // Security check: only customer who owns the project can request revision
+    if (user && user.role === 'customer' && p.customer_id !== user.id && user.id !== 1) {
+      throw new Error('Unauthorized: Only project owner can request revisions.');
+    }
+
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === d.project_id);
+    if (escrow) {
+      const oldState = escrow.status;
+      escrow.status = 'REVISION_REQUESTED';
+      setStore('escrows', escrows);
+      auditApi.log({
+        user_id: user?.id,
+        user_name: user?.full_name,
+        role: user?.role,
+        project_id: p.id,
+        action: 'REQUEST_REVISION',
+        old_state: oldState,
+        new_state: 'REVISION_REQUESTED',
+        reason: `Customer requested revision: ${reason}`
+      });
+    }
+
+    d.status = 'revision_requested';
+    setStore('deliverables', deliverables);
+
+    const revisions = getStore<RevisionRecord[]>('revisions', INITIAL_REVISIONS);
+    const newRev: RevisionRecord = {
+      id: revisions.length + 1,
+      revision_id: `REV-${Date.now().toString().slice(-6)}`,
+      project_id: d.project_id,
+      deliverable_id: d.id,
+      customer_id: p.customer_id,
+      freelancer_id: d.freelancer_id,
+      reason,
+      requested_date: new Date().toISOString(),
+      status: 'REQUESTED'
+    };
+    revisions.unshift(newRev);
+    setStore('revisions', revisions);
+
+    // Notification for freelancer
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: 2, // Freelancer
+      title: 'Revision Requested by Customer',
+      message: `Revision requested on "${d.title}": ${reason}. Please update your deliverable.`,
+      type: 'revision',
+      link: `/freelancer/projects/${p.id}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    return newRev;
+  },
+
+  resubmit: async (revisionId: number, newNotes?: string): Promise<{ status: string; revision: RevisionRecord }> => {
+    const revisions = getStore<RevisionRecord[]>('revisions', INITIAL_REVISIONS);
+    const rev = revisions.find(r => r.id === revisionId);
+    if (!rev) throw new Error('Revision record not found.');
+
+    rev.status = 'RESUBMITTED';
+    setStore('revisions', revisions);
+
+    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
+    const d = deliverables.find(item => item.id === rev.deliverable_id);
+    if (d) {
+      d.version += 1;
+      d.status = 'submitted';
+      if (newNotes) d.notes = newNotes;
+      setStore('deliverables', deliverables);
+    }
+
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === rev.project_id);
+    if (escrow) {
+      const oldState = escrow.status;
+      escrow.status = 'UNDER_REVIEW';
+      setStore('escrows', escrows);
+      auditApi.log({
+        project_id: rev.project_id,
+        action: 'RESUBMIT_DELIVERABLE',
+        old_state: oldState,
+        new_state: 'UNDER_REVIEW',
+        reason: 'Freelancer resubmitted updated deliverable addressing customer revision feedback.'
+      });
+    }
+
+    // Notify customer
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: rev.customer_id,
+      title: 'Revised Deliverable Submitted',
+      message: 'Freelancer has addressed your feedback and resubmitted the deliverable for review.',
+      type: 'deliverable',
+      link: `/customer/projects/${rev.project_id}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    return { status: 'success', revision: rev };
+  }
+};
+
+export const refundsApi = {
+  list: async (projectId?: number): Promise<RefundRecord[]> => {
+    const refunds = getStore<RefundRecord[]>('refunds', INITIAL_REFUNDS);
+    if (projectId) return refunds.filter(r => r.project_id === projectId);
+    return refunds;
+  },
+
+  requestRefund: async (projectId: number, reason: string, amount?: number): Promise<RefundRecord> => {
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === projectId);
+    if (!escrow) throw new Error('Escrow account not found.');
+
+    const refundAmount = amount !== undefined ? amount : escrow.held_amount;
+    if (refundAmount <= 0) throw new Error('Refund amount must be greater than zero.');
+    if (refundAmount > escrow.held_amount) {
+      throw new Error(`Refund amount cannot exceed held escrow ($${escrow.held_amount.toFixed(2)}).`);
+    }
+
+    const refunds = getStore<RefundRecord[]>('refunds', INITIAL_REFUNDS);
+    const refId = `REF-${Date.now().toString().slice(-6)}`;
+    const txId = `TX-REFUND-${Date.now().toString().slice(-8)}`;
+
+    const newRefund: RefundRecord = {
+      id: refunds.length + 1,
+      refund_id: refId,
+      transaction_id: txId,
+      project_id: projectId,
+      customer_id: escrow.customer_id,
+      freelancer_id: escrow.freelancer_id,
+      amount: refundAmount,
+      reason,
+      status: 'REFUND_REQUESTED',
+      is_demo: true,
+      created_at: new Date().toISOString()
+    };
+
+    refunds.unshift(newRefund);
+    setStore('refunds', refunds);
+
+    const oldState = escrow.status;
+    escrow.status = 'REFUND_PENDING';
+    setStore('escrows', escrows);
+
+    auditApi.log({
+      project_id: projectId,
+      action: 'REQUEST_REFUND',
+      old_state: oldState,
+      new_state: 'REFUND_PENDING',
+      reason: `Refund requested ($${refundAmount.toFixed(2)}): ${reason}`,
+      metadata: { refund_id: refId, mode: 'DEMO_ESCROW' }
+    });
+
+    return newRefund;
+  },
+
+  processRefund: async (refundId: string | number): Promise<RefundRecord> => {
+    const refunds = getStore<RefundRecord[]>('refunds', INITIAL_REFUNDS);
+    const refund = refunds.find(r => r.id === Number(refundId) || r.refund_id === refundId);
+    if (!refund) throw new Error('Refund record not found.');
+    if (refund.status === 'REFUNDED') throw new Error('Refund has already been executed.');
+
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === refund.project_id);
+    if (!escrow) throw new Error('Associated escrow account not found.');
+
+    refund.status = 'REFUNDED';
+    refund.updated_at = new Date().toISOString();
+    setStore('refunds', refunds);
+
+    const oldState = escrow.status;
+    escrow.held_amount = Math.max(0, escrow.held_amount - refund.amount);
+    escrow.refunded_amount += refund.amount;
+    escrow.status = 'REFUNDED';
+    setStore('escrows', escrows);
+
+    // Credit back customer's demo wallet
+    walletsApi.credit(refund.customer_id, refund.amount);
+
+    const transactions = getStore<EscrowTransaction[]>('transactions', INITIAL_TRANSACTIONS);
+    transactions.unshift({
+      id: transactions.length + 1,
+      escrow_id: escrow.id,
+      type: 'refund',
+      amount: refund.amount,
+      status: 'success',
+      reference_id: refund.transaction_id,
+      notes: `Demo Escrow Refund executed to customer wallet: ${refund.reason}`,
+      created_at: new Date().toISOString()
+    });
+    setStore('transactions', transactions);
+
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === refund.project_id);
+    if (project) {
+      project.status = 'cancelled';
+      setStore('projects', projects);
+    }
+
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: refund.customer_id,
+      title: 'Demo Escrow Refund Completed',
+      message: `Your demo refund of $${refund.amount.toFixed(2)} has been credited back to your balance.`,
+      type: 'payment',
+      link: `/customer/projects/${refund.project_id}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    auditApi.log({
+      project_id: refund.project_id,
+      action: 'PROCESS_REFUND',
+      old_state: oldState,
+      new_state: 'REFUNDED',
+      reason: `Refund executed successfully in demo mode ($${refund.amount.toFixed(2)}).`,
+      metadata: { refund_id: refund.refund_id, transaction_id: refund.transaction_id }
+    });
+
+    return refund;
+  }
+};
+
 export const escrowApi = {
-  fund: async (projectId: number, amount: number) => {
+  fund: async (projectId: number, amount: number, paymentMethod: string = 'demo_escrow') => {
+    if (amount <= 0) {
+      throw new Error('Funding amount must be greater than $0.00.');
+    }
+
     const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
     const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
     const project = projects.find(p => p.id === projectId);
@@ -755,27 +1226,27 @@ export const escrowApi = {
       escrow = {
         id: escrows.length + 1,
         project_id: projectId,
-        customer_id: 1,
+        customer_id: project.customer_id || 1,
         freelancer_id: project.selected_freelancer_id || 1,
         total_amount: amount,
         held_amount: amount,
         released_amount: 0,
         refunded_amount: 0,
-        status: 'funded_held',
+        status: 'HELD',
         created_at: new Date().toISOString()
       };
       escrows.push(escrow);
     } else {
       escrow.held_amount += amount;
       escrow.total_amount = Math.max(escrow.total_amount, escrow.held_amount);
-      escrow.status = 'funded_held';
+      escrow.status = 'HELD';
     }
     setStore('escrows', escrows);
 
     // Update project state
     project.status = 'in_progress';
     project.escrow_held_amount = escrow.held_amount;
-    project.escrow_status = 'funded_held';
+    project.escrow_status = 'HELD';
     setStore('projects', projects);
 
     // Append transaction
@@ -787,7 +1258,7 @@ export const escrowApi = {
       amount,
       status: 'success',
       reference_id: refId,
-      notes: `Secured $${amount.toFixed(2)} in TrustLance AI Escrow Vault`,
+      notes: `Secured $${amount.toFixed(2)} in TrustLance AI Escrow Vault (${paymentMethod})`,
       created_at: new Date().toISOString()
     });
     setStore('transactions', transactions);
@@ -799,7 +1270,60 @@ export const escrowApi = {
     });
     setStore('milestones', milestones);
 
-    return { status: 'success', reference_id: refId, escrow_status: 'funded_held' };
+    // Audit log
+    auditApi.log({
+      project_id: projectId,
+      project_title: project.title,
+      action: 'FUND_ESCROW',
+      old_state: 'CREATED',
+      new_state: 'HELD',
+      reason: `Customer funded demo escrow ($${amount.toFixed(2)}) secured in TrustLance Vault.`,
+      metadata: { amount, payment_method: paymentMethod, ref_id: refId }
+    });
+
+    // Notify Freelancer
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    const freelancerUserId = escrow.freelancer_id === 1 ? 2 : escrow.freelancer_id;
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: freelancerUserId,
+      title: 'Escrow Payment Secured',
+      message: `$${amount.toFixed(2)} is held in TrustLance AI Escrow for project: ${project.title}. You may begin work.`,
+      type: 'escrow',
+      link: `/freelancer/projects/${projectId}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    return { status: 'success', reference_id: refId, escrow_status: 'HELD' };
+  },
+
+  startWork: async (projectId: number) => {
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === projectId);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === projectId);
+
+    if (escrow) {
+      const oldState = escrow.status;
+      escrow.status = 'WORK_IN_PROGRESS';
+      setStore('escrows', escrows);
+      auditApi.log({
+        project_id: projectId,
+        action: 'START_WORK',
+        old_state: oldState,
+        new_state: 'WORK_IN_PROGRESS',
+        reason: 'Freelancer initialized project workspace and started milestone development.'
+      });
+    }
+
+    if (project) {
+      project.status = 'in_progress';
+      setStore('projects', projects);
+    }
+
+    return { status: 'success', escrow_status: 'WORK_IN_PROGRESS' };
   },
 
   release: async (projectId: number, amount: number, milestoneId?: number) => {
@@ -828,6 +1352,10 @@ export const escrowApi = {
     });
     setStore('transactions', transactions);
 
+    // Credit freelancer wallet
+    const freelancerUserId = escrow.freelancer_id === 1 ? 2 : escrow.freelancer_id;
+    walletsApi.credit(freelancerUserId, amount);
+
     // Update milestone
     if (milestoneId) {
       const milestones = getStore<Milestone[]>('milestones', INITIAL_MILESTONES);
@@ -849,6 +1377,246 @@ export const escrowApi = {
     }
 
     return { status: 'success', reference_id: refId, escrow_status: escrow.status, released_amount: amount };
+  },
+
+  approveAndReleaseDeliverable: async (projectId: number, deliverableId: number) => {
+    const user = authApi.getCurrentUser();
+    if (!user) throw new Error('Authentication required.');
+
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === projectId);
+    if (!project) throw new Error('Project not found.');
+
+    // Backend verification 1: Customer owns project
+    if (user.role === 'customer' && project.customer_id !== user.id && user.id !== 1) {
+      throw new Error('Unauthorized: You are not the project owner.');
+    }
+
+    // Backend verification 2: Freelancer cannot release their own escrow
+    if (user.role === 'freelancer') {
+      throw new Error('Unauthorized: Freelancers cannot release their own escrow payments.');
+    }
+
+    // Backend verification 3: Freelancer assigned
+    if (!project.selected_freelancer_id && !project.hired_freelancer_id) {
+      throw new Error('No freelancer assigned to this contract.');
+    }
+
+    // Backend verification 4: Escrow exists
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === projectId);
+    if (!escrow) throw new Error('No escrow account found for project.');
+
+    // Backend verification 5: Current escrow state allows release
+    const allowedReleaseStates = ['UNDER_REVIEW', 'SUBMITTED', 'HELD', 'WORK_IN_PROGRESS', 'funded_held', 'partially_released'];
+    if (!allowedReleaseStates.includes(escrow.status)) {
+      throw new Error(`Cannot release payment: Escrow is in invalid state "${escrow.status}".`);
+    }
+
+    // Backend verification 6: Deliverable exists
+    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
+    const deliv = deliverables.find(d => d.id === deliverableId && d.project_id === projectId);
+    if (!deliv) throw new Error('Deliverable not found on this project.');
+
+    // Backend verification 7: No active dispute
+    const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+    const activeDispute = disputes.find(d => d.project_id === projectId && ['OPEN', 'UNDER_REVIEW'].includes(d.status));
+    if (activeDispute) {
+      throw new Error('Cannot release payment while a formal dispute is under investigation.');
+    }
+
+    // Backend verification 8: Amount check
+    const releaseAmount = escrow.held_amount;
+    if (releaseAmount <= 0) {
+      throw new Error('Escrow has already been fully released ($0.00 held).');
+    }
+
+    // Execute database transaction atomically:
+    const oldState = escrow.status;
+    escrow.held_amount = 0;
+    escrow.released_amount += releaseAmount;
+    escrow.status = 'RELEASED';
+    setStore('escrows', escrows);
+
+    const refId = `TX-REL-${Date.now().toString().slice(-8)}`;
+    const transactions = getStore<EscrowTransaction[]>('transactions', INITIAL_TRANSACTIONS);
+    transactions.unshift({
+      id: transactions.length + 1,
+      escrow_id: escrow.id,
+      type: 'release',
+      amount: releaseAmount,
+      status: 'success',
+      reference_id: refId,
+      notes: `Customer approved final deliverable "${deliv.title}". AI Broker released funds to freelancer wallet.`,
+      created_at: new Date().toISOString()
+    });
+    setStore('transactions', transactions);
+
+    // Update freelancer wallet
+    const freelancerUserId = escrow.freelancer_id === 1 ? 2 : escrow.freelancer_id;
+    walletsApi.credit(freelancerUserId, releaseAmount);
+
+    // Mark deliverable approved
+    deliv.status = 'approved';
+    setStore('deliverables', deliverables);
+
+    // Mark project completed
+    project.status = 'completed';
+    project.escrow_held_amount = 0;
+    project.escrow_status = 'RELEASED';
+    setStore('projects', projects);
+
+    // Record activity log
+    auditApi.log({
+      user_id: user.id,
+      user_name: user.full_name,
+      role: user.role,
+      project_id: projectId,
+      project_title: project.title,
+      action: 'PAYMENT_RELEASED',
+      old_state: oldState,
+      new_state: 'RELEASED',
+      reason: `Customer approved final deliverable. AI Broker executed transaction ${refId} for $${releaseAmount.toFixed(2)}.`,
+      metadata: { release_amount: releaseAmount, reference_id: refId, deliverable_id: deliverableId }
+    });
+
+    // Notifications
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: freelancerUserId,
+      title: 'Payment Released to Wallet',
+      message: `Congratulations! The customer has approved the deliverable and $${releaseAmount.toFixed(2)} has been transferred to your wallet balance.`,
+      type: 'payment',
+      link: `/freelancer/projects/${projectId}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    notifs.unshift({
+      id: notifs.length + 2,
+      user_id: project.customer_id,
+      title: 'Project Completed & Payment Released',
+      message: `Payment of $${releaseAmount.toFixed(2)} has been released for "${project.title}". Thank you for using TrustLance AI Escrow.`,
+      type: 'payment',
+      link: `/customer/projects/${projectId}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    return {
+      status: 'success',
+      reference_id: refId,
+      released_amount: releaseAmount,
+      escrow_status: 'RELEASED'
+    };
+  },
+
+  simulateDeadlineFailure: async (projectId: number) => {
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === projectId);
+    if (!project) throw new Error('Project not found.');
+
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === projectId);
+    if (!escrow) throw new Error('Escrow account not found.');
+
+    const oldState = escrow.status;
+
+    // 1. Mark project as DEADLINE_MISSED
+    project.status = 'cancelled';
+    (project as any).is_locked = true;
+    (project as any).deadline_status = 'DEADLINE_MISSED';
+    setStore('projects', projects);
+
+    // 2. Create an AI Broker alert
+    const riskAlerts = getStore<RiskAlert[]>('risk_alerts', []);
+    riskAlerts.unshift({
+      id: riskAlerts.length + 1,
+      project_id: projectId,
+      risk_level: 'High Risk',
+      reason: `Deadline breached for Project #${projectId} ("${project.title}"). Required deliverable not submitted. Auto-release locked.`,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      project_title: project.title
+    });
+    setStore('risk_alerts', riskAlerts);
+
+    // 3. Notify customer
+    const notifs = getStore<Notification[]>('notifications', INITIAL_NOTIFICATIONS);
+    notifs.unshift({
+      id: notifs.length + 1,
+      user_id: project.customer_id,
+      title: 'AI Broker Alert: Deadline Missed',
+      message: `Contract deadline has expired for "${project.title}" without required deliverable submission. Escrow funds are locked and refund workflow has been initiated.`,
+      type: 'system',
+      link: `/customer/projects/${projectId}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+
+    // 4. Notify freelancer
+    const freelancerUserId = escrow.freelancer_id === 1 ? 2 : escrow.freelancer_id;
+    notifs.unshift({
+      id: notifs.length + 2,
+      user_id: freelancerUserId,
+      title: 'AI Broker Alert: Contract Deadline Missed',
+      message: `The deadline for project "${project.title}" was reached without deliverable submission. Escrow has been locked and subject to refund.`,
+      type: 'system',
+      link: `/freelancer/projects/${projectId}`,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    });
+    setStore('notifications', notifs);
+
+    // 5. Create refund record
+    const refunds = getStore<RefundRecord[]>('refunds', INITIAL_REFUNDS);
+    const refId = `REF-DEADLINE-${Date.now().toString().slice(-6)}`;
+    const newRefund: RefundRecord = {
+      id: refunds.length + 1,
+      refund_id: refId,
+      transaction_id: `TX-REF-${Date.now().toString().slice(-6)}`,
+      project_id: projectId,
+      customer_id: project.customer_id,
+      freelancer_id: escrow.freelancer_id,
+      amount: escrow.held_amount,
+      reason: 'Contract deadline breached with zero deliverable submission. Automated refund workflow triggered.',
+      status: 'REFUND_REQUESTED',
+      is_demo: true,
+      created_at: new Date().toISOString()
+    };
+    refunds.unshift(newRefund);
+    setStore('refunds', refunds);
+
+    // 6. Update escrow status HELD -> DEADLINE_MISSED -> REFUND_PENDING
+    escrow.status = 'REFUND_PENDING';
+    setStore('escrows', escrows);
+
+    // 7. Record event in ActivityLogs
+    auditApi.log({
+      project_id: projectId,
+      project_title: project.title,
+      action: 'DEADLINE_MISSED',
+      old_state: oldState,
+      new_state: 'DEADLINE_MISSED',
+      reason: 'Project deadline exceeded without deliverable submission. Auto-release locked.'
+    });
+    auditApi.log({
+      project_id: projectId,
+      project_title: project.title,
+      action: 'INITIATE_REFUND',
+      old_state: 'DEADLINE_MISSED',
+      new_state: 'REFUND_PENDING',
+      reason: 'Automated AI Broker refund workflow started due to missed project deadline.',
+      metadata: { refund_id: refId, amount: escrow.held_amount }
+    });
+
+    return {
+      status: 'success',
+      project_id: projectId,
+      escrow_status: 'REFUND_PENDING',
+      refund_id: refId
+    };
   }
 };
 
@@ -877,17 +1645,27 @@ export const deliverablesApi = {
       setStore('projects', projects);
     }
 
+    // Escrow transitions to UNDER_REVIEW
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === projectId);
+    if (escrow) {
+      const oldState = escrow.status;
+      escrow.status = 'UNDER_REVIEW';
+      setStore('escrows', escrows);
+      auditApi.log({
+        project_id: projectId,
+        action: 'SUBMIT_DELIVERABLE',
+        old_state: oldState,
+        new_state: 'UNDER_REVIEW',
+        reason: `Freelancer submitted deliverable: "${title}". Awaiting client review.`
+      });
+    }
+
     return { status: 'success', deliverable: newDeliverable };
   },
 
   requestRevision: async (deliverableId: number, details: string) => {
-    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
-    const d = deliverables.find(item => item.id === deliverableId);
-    if (d) {
-      d.status = 'revision_requested';
-      setStore('deliverables', deliverables);
-    }
-    return { status: 'success', message: 'Revision feedback sent to freelancer.' };
+    return revisionsApi.requestRevision(deliverableId, details);
   }
 };
 
@@ -1075,3 +1853,5 @@ Key Platform Rules:
     return `Welcome to TrustLance AI. All transactions on our platform are governed by intelligent escrow and verified AI Trust Scores. How can I assist you with your active projects, milestone submissions, or talent search today?`;
   }
 };
+
+export * from './aiBroker';

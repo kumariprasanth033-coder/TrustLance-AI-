@@ -245,3 +245,91 @@ export interface RiskAlert {
   full_name?: string;
   project_title?: string;
 }
+
+export type EscrowState =
+  | 'CREATED'
+  | 'FUNDED'
+  | 'HELD'
+  | 'WORK_IN_PROGRESS'
+  | 'SUBMITTED'
+  | 'UNDER_REVIEW'
+  | 'RELEASED'
+  | 'REVISION_REQUESTED'
+  | 'RESUBMITTED'
+  | 'DEADLINE_MISSED'
+  | 'REFUND_PENDING'
+  | 'REFUNDED'
+  | 'DISPUTED'
+  | 'ADMIN_REVIEW'
+  // Legacy compatibility states
+  | 'pending_funding'
+  | 'funded_held'
+  | 'partially_released'
+  | 'fully_released';
+
+export interface RefundRecord {
+  id: number;
+  refund_id: string;
+  transaction_id: string;
+  project_id: number;
+  customer_id: number;
+  freelancer_id?: number;
+  amount: number;
+  reason: string;
+  status: 'REFUND_REQUESTED' | 'REFUND_PROCESSING' | 'REFUNDED' | 'FAILED';
+  is_demo: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface RevisionRecord {
+  id: number;
+  revision_id: string;
+  project_id: number;
+  deliverable_id: number;
+  customer_id: number;
+  freelancer_id: number;
+  reason: string;
+  requested_date: string;
+  status: 'REQUESTED' | 'IN_PROGRESS' | 'RESUBMITTED' | 'APPROVED';
+}
+
+export interface ActivityLog {
+  id: number;
+  user_id: number;
+  user_name: string;
+  role: string;
+  project_id: number;
+  project_title?: string;
+  action: string;
+  old_state: string;
+  new_state: string;
+  timestamp: string;
+  reason: string;
+  metadata?: any;
+}
+
+export interface AIBrokerAnalysis {
+  project_id: number;
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  completion_probability: number;
+  deadline_risk: 'ON_TRACK' | 'APPROACHING' | 'OVERDUE' | 'DEADLINE_MISSED';
+  milestone_progress: number;
+  days_remaining: number;
+  is_deadline_missed: boolean;
+  explanations: string[];
+  freelancer_trust_score: number;
+  evaluated_at: string;
+}
+
+export interface TestResultItem {
+  id: string;
+  title: string;
+  category: 'CORE_WORKFLOW' | 'SECURITY';
+  status: 'PASSED' | 'FAILED' | 'RUNNING' | 'PENDING';
+  message: string;
+  duration_ms: number;
+  timestamp: string;
+  audit_entry?: ActivityLog;
+  details?: Record<string, any>;
+}

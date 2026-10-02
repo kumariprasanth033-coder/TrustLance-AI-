@@ -17,7 +17,10 @@ import {
   ChevronLeft,
   Sparkles,
   Eye,
-  AlertCircle
+  AlertCircle,
+  Brain,
+  Activity,
+  FileCheck
 } from 'lucide-react';
 import { 
   projectsApi, 
@@ -27,7 +30,11 @@ import {
   reviewsApi, 
   disputesApi, 
   proposalsApi,
-  authApi 
+  authApi,
+  auditApi,
+  revisionsApi,
+  refundsApi,
+  aiBrokerApi
 } from '../services/api';
 import { EscrowTimeline } from '../components/EscrowTimeline';
 import { TrustScoreRing } from '../components/TrustScoreRing';
@@ -48,6 +55,18 @@ export const ProjectWorkspacePage: React.FC = () => {
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [revisionDetails, setRevisionDetails] = useState('');
   const [selectedDeliverableId, setSelectedDeliverableId] = useState<number | null>(null);
+
+  // Approval & Resubmission modals
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [selectedDeliverableForApproval, setSelectedDeliverableForApproval] = useState<any>(null);
+  const [showResubmitModal, setShowResubmitModal] = useState(false);
+  const [selectedRevisionId, setSelectedRevisionId] = useState<number | null>(null);
+  const [resubmitNotes, setResubmitNotes] = useState('');
+
+  // Audit, revisions, refunds state
+  const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [projectRevisions, setProjectRevisions] = useState<any[]>([]);
+  const [projectRefunds, setProjectRefunds] = useState<any[]>([]);
 
   // Proposal modal
   const [showProposalModal, setShowProposalModal] = useState(false);
@@ -81,6 +100,12 @@ export const ProjectWorkspacePage: React.FC = () => {
     }
     const msgs = await messagesApi.list(projectId);
     setMessages(msgs);
+    const logs = await auditApi.list(projectId);
+    setActivityLogs(logs);
+    const revs = await revisionsApi.list(projectId);
+    setProjectRevisions(revs);
+    const refs = await refundsApi.list(projectId);
+    setProjectRefunds(refs);
   };
 
   useEffect(() => {
@@ -102,6 +127,44 @@ export const ProjectWorkspacePage: React.FC = () => {
   const triggerNotify = (msg: string) => {
     setNotificationMsg(msg);
     setTimeout(() => setNotificationMsg(null), 4000);
+  };
+
+  // AI Broker Decision Engine Evaluation
+  const brokerAnalysis = project ? aiBrokerApi.evaluateProjectRisk(project, data.milestones || [], data.deliverables || []) : null;
+
+  // Approve Deliverable & Release Escrow Payment (ACID Database Transaction)
+  const handleApproveAndRelease = async () => {
+    if (!selectedDeliverableForApproval) return;
+    setLoading(true);
+    try {
+      const res = await escrowApi.approveAndReleaseDeliverable(projectId, selectedDeliverableForApproval.id);
+      setShowApproveModal(false);
+      setSelectedDeliverableForApproval(null);
+      triggerNotify(`Database Transaction Committed! Escrow RELEASED ($${res.released_amount.toFixed(2)}). Tx: ${res.reference_id}`);
+      await loadProject();
+    } catch (e: any) {
+      alert(e.message || 'Payment release failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resubmit Revised Deliverable
+  const handleResubmitDeliverable = async () => {
+    if (!selectedRevisionId) return;
+    setLoading(true);
+    try {
+      await revisionsApi.resubmit(selectedRevisionId, resubmitNotes);
+      setShowResubmitModal(false);
+      setSelectedRevisionId(null);
+      setResubmitNotes('');
+      triggerNotify('Revised deliverable submitted to customer! Escrow status: UNDER_REVIEW.');
+      await loadProject();
+    } catch (e: any) {
+      alert(e.message || 'Resubmission failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 1. Fund Escrow Action
