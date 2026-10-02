@@ -4,6 +4,7 @@ import { Shield, Star, DollarSign, Clock, ArrowRight, CheckCircle2, ChevronRight
 import { projectsApi, authApi, freelancersApi } from '../services/api';
 import { Project } from '../types';
 import { TrustScoreRing } from '../components/TrustScoreRing';
+import { Card } from '../components/ui/Card';
 
 export const FreelancerDashboardPage: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -21,7 +22,7 @@ export const FreelancerDashboardPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Top Welcome Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
             Freelancer Command Center
@@ -36,7 +37,7 @@ export const FreelancerDashboardPage: React.FC = () => {
 
         <Link
           to="/services"
-          className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all shrink-0"
+          className="btn-primary-gradient px-5 py-2.5 text-xs font-bold gap-2 shrink-0"
         >
           <Sparkles className="w-4 h-4" />
           <span>Browse Open Projects</span>
@@ -44,7 +45,7 @@ export const FreelancerDashboardPage: React.FC = () => {
       </div>
 
       {/* Trust Score & Metrics Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+      <Card className="flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex items-center gap-6">
           <TrustScoreRing score={freelancer?.trust_score || 99.2} size={90} strokeWidth={7} />
           <div>
@@ -74,10 +75,10 @@ export const FreelancerDashboardPage: React.FC = () => {
             <strong className="text-base text-slate-900 dark:text-white font-bold">52 Projects</strong>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Active Contracts & Deliverables */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-4">
+      <Card className="space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
           <div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">Active Milestone Contracts</h3>
@@ -106,7 +107,7 @@ export const FreelancerDashboardPage: React.FC = () => {
 
               <Link
                 to={`/customer/projects/${proj.id}`}
-                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl flex items-center gap-1.5 transition-all whitespace-nowrap shadow-xs"
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold gap-1.5 whitespace-nowrap"
               >
                 <span>Upload Deliverable / Workspace</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -114,10 +115,10 @@ export const FreelancerDashboardPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* Available Projects to Bid On */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-4">
+      <Card className="space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
           <div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">Open Marketplace Projects</h3>
@@ -142,14 +143,14 @@ export const FreelancerDashboardPage: React.FC = () => {
 
               <Link
                 to={`/customer/projects/${p.id}`}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-slate-100 font-bold rounded-xl transition-colors whitespace-nowrap border border-slate-200 dark:border-white/10"
+                className="btn-secondary-surface px-4 py-2 text-xs font-bold whitespace-nowrap"
               >
                 Submit Proposal
               </Link>
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

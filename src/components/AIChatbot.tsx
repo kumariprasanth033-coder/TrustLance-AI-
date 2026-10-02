@@ -85,7 +85,7 @@ export const AIChatbot: React.FC = () => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white p-3.5 rounded-full shadow-lg shadow-blue-500/25 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+        className="btn-primary-gradient fixed bottom-6 right-6 z-40 p-3.5 rounded-full shadow-lg shadow-blue-500/25 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 group"
         aria-label="Open TrustLance AI Assistant"
       >
         <div className="relative">
@@ -216,7 +216,7 @@ export const AIChatbot: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="p-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white rounded-xl transition-all shadow-md shadow-blue-500/20 shrink-0"
+                  className="btn-primary-gradient p-2.5 rounded-xl shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Lock, Mail, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 import { authApi } from '../services/api';
+import { Card } from '../components/ui/Card';
 
 export const AdminLoginPage: React.FC = () => {
   const [email, setEmail] = useState('admin@demo.com');
@@ -53,7 +54,7 @@ export const AdminLoginPage: React.FC = () => {
         </div>
 
         {/* Card */}
-        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <Card className="p-6 sm:p-8 shadow-2xl">
           
           <div className="mb-6 p-3.5 rounded-2xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
             <span className="text-slate-700 dark:text-slate-300 font-medium">
@@ -112,7 +113,7 @@ export const AdminLoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 mt-2 transition-all"
+              className="btn-primary-gradient w-full py-3 px-4 text-xs font-bold gap-2 mt-2"
             >
               <span>{loading ? 'Verifying RBAC Permissions...' : 'Access Admin Command Console'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -122,7 +123,7 @@ export const AdminLoginPage: React.FC = () => {
           <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5 text-center text-[11px] text-slate-500 dark:text-slate-400">
             Public admin registration is strictly prohibited by platform security policy.
           </div>
-        </div>
+        </Card>
 
       </div>
     </div>

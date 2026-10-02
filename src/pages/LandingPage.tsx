@@ -21,6 +21,7 @@ import {
 import { servicesApi, freelancersApi } from '../services/api';
 import { ServiceCategory } from '../types';
 import { TrustScoreRing } from '../components/TrustScoreRing';
+import { Card } from '../components/ui/Card';
 
 export const LandingPage: React.FC = () => {
   const [services, setServices] = useState<ServiceCategory[]>([]);
@@ -70,7 +71,7 @@ export const LandingPage: React.FC = () => {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
             <Link
               to="/freelancers"
-              className="px-6 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all flex items-center gap-2"
+              className="btn-primary-gradient px-6 py-3.5 text-sm font-bold flex items-center gap-2"
             >
               <span>Find Freelancers</span>
               <ArrowRight className="w-4 h-4" />
@@ -78,7 +79,7 @@ export const LandingPage: React.FC = () => {
 
             <Link
               to="/customer/projects/create"
-              className="px-6 py-3.5 text-sm font-semibold text-slate-800 dark:text-slate-200 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 rounded-xl border border-slate-300 dark:border-white/10 shadow-xs transition-all flex items-center gap-2"
+              className="btn-secondary-surface px-6 py-3.5 text-sm font-semibold flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-blue-500" />
               <span>Post a Project</span>
@@ -207,9 +208,10 @@ export const LandingPage: React.FC = () => {
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {filteredServices.slice(0, 12).map((srv) => (
-            <div
+            <Card
               key={srv.id}
-              className="p-6 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-all hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group shadow-sm"
+              hoverLift
+              className="flex flex-col justify-between group shadow-sm"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -248,7 +250,7 @@ export const LandingPage: React.FC = () => {
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
@@ -256,7 +258,7 @@ export const LandingPage: React.FC = () => {
           <div className="text-center mt-8">
             <Link
               to="/services"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#151B2E] text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 shadow-sm transition-all"
+              className="btn-secondary-surface px-6 py-3 text-xs font-bold gap-2"
             >
               <span>View All 20 Services</span>
               <ArrowRight className="w-4 h-4" />
@@ -267,43 +269,46 @@ export const LandingPage: React.FC = () => {
 
       {/* 5. VERIFIABLE AI TRUST SCORE BREAKDOWN */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-8 sm:p-12 rounded-3xl bg-slate-900 text-white relative overflow-hidden">
-          <div className="space-y-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 block">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-8 sm:p-12 rounded-3xl bg-[#151B2E] border border-white/10 text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-500/10 via-purple-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="space-y-6 relative z-10">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 block">
               Algorithmic Truth, Not Popularity Contests
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
               The AI Trust Score™ (0 to 100)
             </h2>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Unlike legacy platforms with bought reviews and fake rankings, TrustLance AI calculates a mathematical Trust Score derived directly from verified MySQL transaction tables.
+              Unlike legacy platforms with bought reviews and fake rankings, TrustLance AI calculates a mathematical Trust Score derived directly from verified transaction ledgers.
             </p>
 
             <div className="grid grid-cols-2 gap-4 text-xs">
-              <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-                <strong className="text-white block text-sm mb-1">30% Client Ratings</strong>
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <strong className="text-white block text-sm mb-1 font-bold">30% Client Ratings</strong>
                 <span className="text-slate-400">Grounded in verified completed escrow deliveries.</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-                <strong className="text-white block text-sm mb-1">25% Completion Rate</strong>
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <strong className="text-white block text-sm mb-1 font-bold">25% Completion Rate</strong>
                 <span className="text-slate-400">Strict tracking of finished vs abandoned contracts.</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-                <strong className="text-white block text-sm mb-1">20% On-Time Delivery</strong>
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <strong className="text-white block text-sm mb-1 font-bold">20% On-Time Delivery</strong>
                 <span className="text-slate-400">Timestamped deliverable uploads against deadlines.</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-                <strong className="text-white block text-sm mb-1">15% Response Speed</strong>
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <strong className="text-white block text-sm mb-1 font-bold">15% Response Speed</strong>
                 <span className="text-slate-400">Sub-hour active inquiry reply latency tracking.</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center p-8 bg-slate-800/60 rounded-2xl border border-slate-700/80">
+          <div className="flex flex-col items-center justify-center p-8 bg-white/5 rounded-3xl border border-white/10 relative z-10">
             <TrustScoreRing score={99.2} size={150} strokeWidth={10} />
-            <div className="text-center mt-4">
-              <h4 className="text-base font-bold">Elite Tier Freelancer</h4>
-              <p className="text-xs text-slate-400 mt-1 max-w-xs">
+            <div className="text-center mt-5">
+              <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
+                Elite Tier Talent
+              </span>
+              <p className="text-xs text-slate-300 mt-3 max-w-xs leading-relaxed">
                 Scores 98–100 represent the top 2% of platform talent with verified 100% on-time records and zero escrow disputes.
               </p>
             </div>
@@ -315,7 +320,7 @@ export const LandingPage: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
               Top Rated Talent
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -325,7 +330,7 @@ export const LandingPage: React.FC = () => {
 
           <Link
             to="/freelancers"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 flex items-center gap-1"
           >
             <span>Explore All Freelancers</span>
             <ChevronRight className="w-4 h-4" />
@@ -334,9 +339,10 @@ export const LandingPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {freelancers.slice(0, 3).map((f) => (
-            <div
+            <Card
               key={f.id}
-              className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+              hoverLift
+              className="flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-start justify-between mb-4">
@@ -344,42 +350,63 @@ export const LandingPage: React.FC = () => {
                     <img
                       src={f.avatar_url}
                       alt={f.full_name}
-                      className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                      className="w-14 h-14 rounded-2xl object-cover border border-slate-200 dark:border-white/10 shadow-xs"
                     />
                     <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-sm">{f.full_name}</h4>
-                      <span className="text-xs text-slate-600 dark:text-slate-400 block line-clamp-1">{f.headline}</span>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-base group-hover:text-blue-500 transition-colors">
+                        {f.full_name}
+                      </h4>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 block line-clamp-1 mt-0.5 font-medium">
+                        {f.headline}
+                      </span>
                     </div>
                   </div>
-                  <TrustScoreRing score={f.trust_score} size={54} strokeWidth={4} showTier={false} />
+                  <TrustScoreRing score={f.trust_score} size={60} strokeWidth={5} showTier={false} />
                 </div>
 
-                <p className="text-xs text-slate-700 dark:text-slate-300 line-clamp-3 leading-relaxed mb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-bold">
+                    96% AI Match
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
+                    {f.availability === 'available' ? 'Available' : 'Busy'}
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed mb-4 font-medium">
                   {f.bio}
                 </p>
 
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {f.skills?.slice(0, 3).map((sk: any, i: number) => (
-                    <span key={i} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono font-medium border border-slate-200/70 dark:border-slate-700">
+                    <span key={i} className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-slate-200 font-mono font-medium border border-slate-200/70 dark:border-white/10">
                       {sk.name}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-semibold">Rate</span>
-                  <span className="font-bold text-slate-900 dark:text-white tabular-nums">${f.hourly_rate}/hr</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-semibold">Starting at</span>
+                  <span className="font-bold text-slate-900 dark:text-white tabular-nums text-sm">${f.hourly_rate}/hr</span>
                 </div>
-                <Link
-                  to={`/freelancers/${f.id}`}
-                  className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-2xs transition-colors"
-                >
-                  View Profile
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/freelancers/${f.id}`}
+                    className="btn-secondary-surface px-3 py-1.5 text-xs font-semibold"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    to={`/customer/projects/create?hire_id=${f.id}`}
+                    className="btn-primary-gradient px-3.5 py-1.5 text-xs font-semibold"
+                  >
+                    Hire Now
+                  </Link>
+                </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </section>
@@ -387,7 +414,7 @@ export const LandingPage: React.FC = () => {
       {/* 7. FAQ ACCORDION */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
             Questions Answered
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -399,7 +426,7 @@ export const LandingPage: React.FC = () => {
           {[
             {
               q: 'How does TrustLance AI guarantee that my payment is protected?',
-              a: 'When you hire a freelancer, your funds are secured in the TrustLance AI Escrow Vault backed by an ACID-compliant MySQL ledger. The freelancer only receives payment after you explicitly review and approve the submitted deliverables.'
+              a: 'When you hire a freelancer, your funds are secured in the TrustLance AI Escrow Vault backed by an ACID-compliant transaction ledger. The freelancer only receives payment after you explicitly review and approve the submitted deliverables.'
             },
             {
               q: 'How is the AI Trust Score calculated?',
@@ -414,12 +441,12 @@ export const LandingPage: React.FC = () => {
               a: 'Customers can request structured revisions directly through the project workspace. If an agreement cannot be reached, either party can open a formal dispute, triggering automated Gemini scope analysis and platform moderator adjudication.'
             }
           ].map((faq, i) => (
-            <div key={i} className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div key={i} className="p-5 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-sm">
               <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1.5 flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                <HelpCircle className="w-4 h-4 text-blue-500 shrink-0" />
                 {faq.q}
               </h4>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed pl-6">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed pl-6 font-medium">
                 {faq.a}
               </p>
             </div>
@@ -439,13 +466,13 @@ export const LandingPage: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/onboarding"
-              className="px-6 py-3 bg-white text-blue-700 font-bold text-sm rounded-xl shadow-md hover:bg-blue-50 transition-all"
+              className="btn-primary-gradient px-6 py-3 text-sm font-bold shadow-lg"
             >
               Get Started Now
             </Link>
             <Link
               to="/customer/projects/create"
-              className="px-6 py-3 bg-blue-700/60 hover:bg-blue-700 border border-white/20 text-white font-bold text-sm rounded-xl transition-all"
+              className="btn-secondary-surface px-6 py-3 text-sm font-bold text-white border-white/30"
             >
               Post a Project
             </Link>

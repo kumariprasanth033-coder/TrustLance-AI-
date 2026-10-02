@@ -307,7 +307,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'open' && isFreelancer && (
             <button
               onClick={() => setShowProposalModal(true)}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="btn-primary-gradient px-5 py-2.5 text-xs font-bold gap-2"
             >
               <Sparkles className="w-4 h-4" />
               <span>Submit Proposal</span>
@@ -318,7 +318,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.selected_freelancer_id && (!data.escrow || data.escrow.status === 'pending_funding') && isCustomer && (
             <button
               onClick={() => setShowFundModal(true)}
-              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="btn-primary-gradient px-5 py-2.5 text-xs font-bold gap-2"
             >
               <Lock className="w-4 h-4" />
               <span>Fund Escrow (${project.budget.toFixed(2)})</span>
@@ -329,7 +329,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'in_progress' && isFreelancer && (
             <button
               onClick={() => setShowDeliverModal(true)}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="btn-primary-gradient px-5 py-2.5 text-xs font-bold gap-2"
             >
               <Upload className="w-4 h-4" />
               <span>Submit Deliverable</span>
@@ -340,7 +340,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {project.status === 'completed' && isCustomer && (
             <button
               onClick={() => setShowReviewModal(true)}
-              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="btn-primary-gradient px-5 py-2.5 text-xs font-bold gap-2"
             >
               <Star className="w-4 h-4 fill-white/20" />
               <span>Submit Freelancer Review</span>
@@ -351,7 +351,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           {['in_progress', 'under_review'].includes(project.status) && (
             <button
               onClick={() => setShowDisputeModal(true)}
-              className="px-3.5 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-rose-600 text-xs font-semibold rounded-xl transition-colors bg-white dark:bg-slate-800 shadow-2xs"
+              className="btn-secondary-surface px-3.5 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400"
             >
               Open Dispute
             </button>
@@ -467,7 +467,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                         {project.status === 'open' && isCustomer && pr.status === 'pending' && (
                           <button
                             onClick={() => handleAcceptProposal(pr.id)}
-                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-2xs transition-colors"
+                            className="btn-primary-gradient px-3.5 py-1.5 text-xs font-bold"
                           >
                             Accept & Hire
                           </button>
@@ -546,7 +546,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                   {isCustomer && m.status === 'submitted' && (
                     <button
                       onClick={() => handleReleaseMilestone(m)}
-                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs shadow-2xs"
+                      className="btn-primary-gradient px-4 py-1.5 text-xs font-semibold"
                     >
                       Approve & Release ${m.amount.toFixed(2)}
                     </button>
@@ -575,7 +575,7 @@ export const ProjectWorkspacePage: React.FC = () => {
             {isFreelancer && project.status === 'in_progress' && (
               <button
                 onClick={() => setShowDeliverModal(true)}
-                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-2xs"
+                className="btn-primary-gradient px-3.5 py-1.5 text-xs font-semibold"
               >
                 + New Deliverable
               </button>
@@ -612,7 +612,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                           setSelectedDeliverableId(deliv.id);
                           setShowRevisionModal(true);
                         }}
-                        className="px-3 py-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg"
+                        className="btn-secondary-surface px-3 py-1.5 text-xs font-semibold"
                       >
                         Request Revision
                       </button>
@@ -655,7 +655,7 @@ export const ProjectWorkspacePage: React.FC = () => {
             {isCustomer && (!data.escrow || data.escrow.held_amount === 0) && (
               <button
                 onClick={() => setShowFundModal(true)}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20"
+                className="btn-primary-gradient px-5 py-2.5 text-xs font-bold"
               >
                 + Fund Escrow
               </button>
@@ -811,7 +811,7 @@ export const ProjectWorkspacePage: React.FC = () => {
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs"
+              className="btn-primary-gradient px-4 py-2 text-xs font-semibold gap-1.5"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Send</span>
@@ -852,7 +852,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowFundModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -860,7 +860,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleFundEscrow}
-                className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
               >
                 {loading ? 'Securing Funds...' : `Confirm Deposit $${fundAmount}`}
               </button>
@@ -900,7 +900,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowDeliverModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -908,7 +908,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleSubmitDeliverable}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-semibold"
               >
                 Submit for Client Approval
               </button>
@@ -937,7 +937,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowRevisionModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -945,7 +945,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleRequestRevision}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-semibold"
               >
                 Send Revision Feedback
               </button>
@@ -984,7 +984,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowProposalModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -992,7 +992,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleSubmitProposal}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
               >
                 Submit Proposal
               </button>
@@ -1034,7 +1034,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -1042,7 +1042,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleSubmitReview}
-                className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
               >
                 Submit Review
               </button>
@@ -1085,7 +1085,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowDisputeModal(false)}
-                className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -1093,7 +1093,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleOpenDispute}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold"
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
               >
                 Lock Escrow & Submit Dispute
               </button>

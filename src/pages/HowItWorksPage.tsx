@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, Lock, Star, Cpu, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { TrustScoreRing, AITrustScoreCard } from '../components/TrustScoreRing';
 import { AIBrokerVisual } from '../components/EscrowTimeline';
+import { Card } from '../components/ui/Card';
 
 export const HowItWorksPage: React.FC = () => {
   return (
@@ -45,7 +46,7 @@ export const HowItWorksPage: React.FC = () => {
           freelancerName="TrustLance AI Network Benchmark"
         />
 
-        <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-6">
+        <Card className="p-8 sm:p-10 space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-500/20">
               <Cpu className="w-5 h-5" />
@@ -81,7 +82,7 @@ export const HowItWorksPage: React.FC = () => {
               <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium mt-1 block">Reliable freelancers with established reviews.</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Call to action */}
@@ -95,7 +96,7 @@ export const HowItWorksPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/onboarding"
-            className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 font-bold text-xs rounded-xl shadow-lg transition-all whitespace-nowrap"
+            className="btn-primary-gradient px-6 py-3 text-xs font-bold whitespace-nowrap shadow-lg"
           >
             Get Started Now
           </Link>

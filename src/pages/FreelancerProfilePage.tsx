@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Star, ShieldCheck, Clock, CheckCircle2, ChevronLeft, ArrowRight, DollarSign, Award, MessageSquare } from 'lucide-react';
 import { freelancersApi } from '../services/api';
 import { TrustScoreRing, AITrustScoreCard } from '../components/TrustScoreRing';
+import { Card } from '../components/ui/Card';
 
 export const FreelancerProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ export const FreelancerProfilePage: React.FC = () => {
       </div>
 
       {/* Main Profile Header Card */}
-      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+      <Card className="p-8 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <img
             src={freelancer.avatar_url}
@@ -78,7 +79,7 @@ export const FreelancerProfilePage: React.FC = () => {
           <div className="space-y-2.5">
             <Link
               to="/customer/projects/create"
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all whitespace-nowrap"
+              className="btn-primary-gradient px-6 py-2.5 text-xs font-bold gap-2 whitespace-nowrap"
             >
               <span>Hire / Invite</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -89,14 +90,14 @@ export const FreelancerProfilePage: React.FC = () => {
             </span>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Grid: Bio & Trust Score Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Left Column: Biography & Skills */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg">
+          <Card className="p-8">
             <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">
               About Professional Experience
             </h3>
@@ -119,10 +120,10 @@ export const FreelancerProfilePage: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Client Reviews Section */}
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg">
+          <Card className="p-8">
             <h3 className="font-bold text-base text-slate-900 dark:text-white mb-4">
               Verified Client Reviews ({freelancer.reviews?.length || 0})
             </h3>
@@ -150,7 +151,7 @@ export const FreelancerProfilePage: React.FC = () => {
             ) : (
               <p className="text-xs text-slate-500">No reviews recorded yet for this profile.</p>
             )}
-          </div>
+          </Card>
         </div>
 
         {/* Right Column: AI Trust Score & Escrow Guarantee */}
@@ -164,7 +165,7 @@ export const FreelancerProfilePage: React.FC = () => {
             freelancerName={freelancer.full_name}
           />
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 text-xs space-y-3 shadow-lg">
+          <Card className="p-6 text-xs space-y-3">
             <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-blue-500" />
               <span>Escrow Protection Guarantee</span>
@@ -172,7 +173,7 @@ export const FreelancerProfilePage: React.FC = () => {
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-[11px]">
               Hiring {freelancer.full_name} is governed by TrustLance AI Escrow. Your payment is held safely until you review and approve each deliverable tranche.
             </p>
-          </div>
+          </Card>
         </div>
 
       </div>

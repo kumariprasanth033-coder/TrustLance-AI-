@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Shield, Lock, Mail, User, ArrowRight, AlertCircle, Briefcase, Award } from 'lucide-react';
 import { authApi } from '../services/api';
+import { Card } from '../components/ui/Card';
 
 export const RegisterPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -64,7 +65,7 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         {/* Card */}
-        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <Card className="p-6 sm:p-8 shadow-2xl">
           
           {/* Role Tabs */}
           <div className="grid grid-cols-2 gap-1 p-1 bg-slate-100 dark:bg-white/5 rounded-2xl mb-6 text-xs font-bold border border-slate-200/60 dark:border-white/5">
@@ -188,7 +189,7 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 mt-4"
+              className="btn-primary-gradient w-full py-3 px-4 text-xs font-bold gap-2 mt-4"
             >
               <span>{loading ? 'Creating Account...' : `Register as ${role === 'customer' ? 'Customer' : 'Freelancer'}`}</span>
               <ArrowRight className="w-4 h-4" />
@@ -201,7 +202,7 @@ export const RegisterPage: React.FC = () => {
               Sign in to your account
             </Link>
           </div>
-        </div>
+        </Card>
 
       </div>
     </div>

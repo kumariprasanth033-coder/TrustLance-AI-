@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Globe, ChevronRight, Sparkles, Layers, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { servicesApi } from '../services/api';
 import { ServiceCategory } from '../types';
+import { Card } from '../components/ui/Card';
 
 export const ServicesPage: React.FC = () => {
   const [services, setServices] = useState<ServiceCategory[]>([]);
@@ -103,9 +104,10 @@ export const ServicesPage: React.FC = () => {
       {/* Services Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filtered.map((service) => (
-          <div
+          <Card
             key={service.id}
-            className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-all hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between group shadow-sm"
+            hoverLift
+            className="flex flex-col justify-between group"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -143,19 +145,19 @@ export const ServicesPage: React.FC = () => {
               <div className="flex items-center gap-2 pt-1">
                 <Link
                   to={`/services/${service.id}`}
-                  className="flex-1 py-2 text-center text-xs font-bold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-colors border border-slate-200 dark:border-white/10"
+                  className="btn-secondary-surface flex-1 py-2 text-xs font-bold"
                 >
                   Details
                 </Link>
                 <Link
                   to={`/customer/projects/create?service_id=${service.id}`}
-                  className="flex-1 py-2 text-center text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-xs transition-all"
+                  className="btn-primary-gradient flex-1 py-2 text-xs font-bold"
                 >
                   Post Job
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

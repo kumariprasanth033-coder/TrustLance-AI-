@@ -15,6 +15,7 @@ import {
   ShieldAlert,
   ChevronRight
 } from 'lucide-react';
+import { Card } from './ui/Card';
 
 interface EscrowTimelineProps {
   currentStatus: 'open' | 'in_progress' | 'under_review' | 'completed' | 'disputed' | string;
@@ -40,7 +41,7 @@ export const EscrowTimeline: React.FC<EscrowTimelineProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl">
+    <Card className="p-6 sm:p-8 shadow-xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-5 border-b border-slate-100 dark:border-white/5 mb-6 gap-4">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
@@ -103,7 +104,7 @@ export const EscrowTimeline: React.FC<EscrowTimelineProps> = ({
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -137,7 +138,7 @@ export const AIBrokerVisual: React.FC<AIBrokerVisualProps> = ({
   ];
 
   return (
-    <div className={`p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-2xl space-y-6 ${className}`}>
+    <Card className={`p-6 sm:p-8 shadow-2xl space-y-6 ${className}`}>
       {/* Header with AI Broker Shield Icon */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 dark:border-white/5 gap-4">
         <div className="flex items-center gap-3.5">
@@ -285,7 +286,7 @@ export const AIBrokerVisual: React.FC<AIBrokerVisualProps> = ({
           })}
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

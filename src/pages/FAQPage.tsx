@@ -1,5 +1,6 @@
 import React from 'react';
 import { HelpCircle, Shield, CheckCircle2, Sparkles } from 'lucide-react';
+import { Card } from '../components/ui/Card';
 
 export const FAQPage: React.FC = () => {
   const faqs = [
@@ -42,9 +43,10 @@ export const FAQPage: React.FC = () => {
 
       <div className="space-y-4 text-xs">
         {faqs.map((faq, i) => (
-          <div
+          <Card
             key={i}
-            className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg space-y-2.5 transition-all hover:border-blue-500/30"
+            hoverLift
+            className="p-6 space-y-2.5 transition-all hover:border-blue-500/30"
           >
             <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2.5">
               <HelpCircle className="w-4 h-4 text-blue-500 shrink-0" />
@@ -53,7 +55,7 @@ export const FAQPage: React.FC = () => {
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed pl-6.5 font-normal">
               {faq.a}
             </p>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

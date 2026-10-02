@@ -223,14 +223,14 @@ INSERT INTO services (id, name, slug, description, category, avg_budget, deliver
         <div className="px-6 py-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 flex items-center justify-between">
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 font-semibold px-2 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+            className="btn-secondary-surface text-rose-600 dark:text-rose-400 px-3 py-1.5 text-xs font-semibold gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Demo DB State
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            className="btn-primary-gradient px-4 py-2 text-xs font-semibold"
           >
             Close Guide
           </button>

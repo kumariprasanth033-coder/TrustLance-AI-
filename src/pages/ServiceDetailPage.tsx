@@ -4,6 +4,7 @@ import { Globe, ArrowRight, ShieldCheck, Clock, DollarSign, Star, Sparkles, Chec
 import { servicesApi, freelancersApi } from '../services/api';
 import { ServiceCategory } from '../types';
 import { TrustScoreRing } from '../components/TrustScoreRing';
+import { Card } from '../components/ui/Card';
 
 export const ServiceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,7 +41,7 @@ export const ServiceDetailPage: React.FC = () => {
       </div>
 
       {/* Hero Service Banner */}
-      <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <Card className="p-8 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-3 max-w-2xl">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <span>{service.category}</span>
@@ -73,13 +74,13 @@ export const ServiceDetailPage: React.FC = () => {
         <div>
           <Link
             to={`/customer/projects/create?service_id=${service.id}`}
-            className="px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2 transition-all whitespace-nowrap"
+            className="btn-primary-gradient px-6 py-3.5 text-xs font-bold gap-2 whitespace-nowrap"
           >
             <Sparkles className="w-4 h-4" />
             <span>Post a Project in This Service</span>
           </Link>
         </div>
-      </div>
+      </Card>
 
       {/* Recommended Freelancers in this discipline */}
       <div>
@@ -94,9 +95,10 @@ export const ServiceDetailPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {freelancers.slice(0, 3).map((f) => (
-            <div
+            <Card
               key={f.id}
-              className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between"
+              hoverLift
+              className="flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between mb-4">
@@ -131,13 +133,13 @@ export const ServiceDetailPage: React.FC = () => {
                 <span className="font-bold text-slate-900 dark:text-white tabular-nums">${f.hourly_rate}/hr</span>
                 <Link
                   to={`/freelancers/${f.id}`}
-                  className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-500 flex items-center gap-1"
+                  className="btn-secondary-surface px-3 py-1.5 text-xs font-bold gap-1"
                 >
                   <span>View Profile</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

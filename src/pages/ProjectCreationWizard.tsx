@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, ArrowLeft, Check, Layers, DollarSign, Calendar, FileText, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { servicesApi, projectsApi } from '../services/api';
 import { ServiceCategory } from '../types';
+import { Card } from '../components/ui/Card';
 
 export const ProjectCreationWizard: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -106,10 +107,10 @@ export const ProjectCreationWizard: React.FC = () => {
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 step === s.id
-                  ? 'bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950 shadow-2xs'
+                  ? 'bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950/60 shadow-2xs'
                   : step > s.id
                   ? 'bg-emerald-600 text-white'
-                  : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 font-semibold'
+                  : 'bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-400 font-semibold'
               }`}
             >
               {step > s.id ? <Check className="w-3.5 h-3.5" /> : s.id}
@@ -117,13 +118,13 @@ export const ProjectCreationWizard: React.FC = () => {
             <span className={`text-[11px] font-semibold hidden sm:inline ${step === s.id ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-600 dark:text-slate-400'}`}>
               {s.label}
             </span>
-            {idx < 4 && <div className="w-6 sm:w-10 h-0.5 bg-slate-200 dark:bg-slate-800 hidden sm:block" />}
+            {idx < 4 && <div className="w-6 sm:w-10 h-0.5 bg-slate-200 dark:bg-white/10 hidden sm:block" />}
           </div>
         ))}
       </div>
 
       {/* Main Form Container */}
-      <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-xl">
+      <Card className="p-6 sm:p-10 shadow-xl">
         
         {error && (
           <div className="mb-6 p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs">
@@ -356,7 +357,7 @@ export const ProjectCreationWizard: React.FC = () => {
             <button
               type="button"
               onClick={() => setStep(step - 1)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5"
+              className="btn-secondary-surface px-4 py-2 text-xs font-semibold gap-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -368,7 +369,7 @@ export const ProjectCreationWizard: React.FC = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all"
+                className="btn-primary-gradient px-6 py-2.5 text-xs font-bold gap-2"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4 h-4" />
@@ -378,7 +379,7 @@ export const ProjectCreationWizard: React.FC = () => {
                 type="button"
                 disabled={loading}
                 onClick={() => handleSubmit(false)}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2 transition-all"
+                className="btn-primary-gradient px-8 py-3 text-xs font-bold gap-2"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>{loading ? 'Publishing Project to MySQL...' : 'Publish Project to Marketplace'}</span>
@@ -387,7 +388,7 @@ export const ProjectCreationWizard: React.FC = () => {
           </div>
         </div>
 
-      </div>
+      </Card>
     </div>
   );
 };

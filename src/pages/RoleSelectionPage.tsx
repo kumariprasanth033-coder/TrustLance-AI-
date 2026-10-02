@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Briefcase, UserCheck, Shield, Check, ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Card } from '../components/ui/Card';
 
 export const RoleSelectionPage: React.FC = () => {
   return (
@@ -25,7 +26,7 @@ export const RoleSelectionPage: React.FC = () => {
       <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
         
         {/* Customer Onboarding Card */}
-        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between group hover:border-blue-500/50">
+        <Card hoverLift className="p-8 sm:p-10 flex flex-col justify-between group hover:border-blue-500/50">
           <div>
             <div className="flex items-center justify-between mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
@@ -65,15 +66,15 @@ export const RoleSelectionPage: React.FC = () => {
 
           <Link
             to="/register?role=customer"
-            className="w-full py-3.5 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:gap-3"
+            className="btn-primary-gradient w-full py-3.5 px-6 font-bold text-sm rounded-xl flex items-center justify-center gap-2 group-hover:gap-3"
           >
             <span>Join as Customer</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
+        </Card>
 
         {/* Freelancer Onboarding Card */}
-        <div className="bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between group hover:border-purple-500/50">
+        <Card hoverLift className="p-8 sm:p-10 flex flex-col justify-between group hover:border-purple-500/50">
           <div>
             <div className="flex items-center justify-between mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform">
@@ -113,12 +114,12 @@ export const RoleSelectionPage: React.FC = () => {
 
           <Link
             to="/register?role=freelancer"
-            className="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:gap-3"
+            className="btn-primary-gradient w-full py-3.5 px-6 font-bold text-sm rounded-xl flex items-center justify-center gap-2 group-hover:gap-3"
           >
             <span>Join as Freelancer</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
+        </Card>
 
       </div>
 

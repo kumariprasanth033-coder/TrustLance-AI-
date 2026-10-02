@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, Star, Shield, Filter, ArrowRight, CheckCircle2, Clock } from 'lucide-react';
 import { freelancersApi } from '../services/api';
 import { TrustScoreRing } from '../components/TrustScoreRing';
+import { Card } from '../components/ui/Card';
 
 export const FreelancerDirectoryPage: React.FC = () => {
   const [freelancers, setFreelancers] = useState<any[]>([]);
@@ -24,15 +25,15 @@ export const FreelancerDirectoryPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-8">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
             Verified Talent Network
           </span>
           <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Find Top Verified Freelancers
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl font-medium">
             Talent ranked by mathematical AI Trust Scores, verified delivery records, and zero-dispute histories.
           </p>
         </div>
@@ -45,7 +46,7 @@ export const FreelancerDirectoryPage: React.FC = () => {
             placeholder="Search by name, role, or skill..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
+            className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-[#151B2E] border border-slate-300 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs font-medium"
           />
         </div>
       </div>
@@ -91,9 +92,10 @@ export const FreelancerDirectoryPage: React.FC = () => {
         {filtered.map((f, idx) => {
           const matchPercent = Math.min(99, Math.round(f.trust_score * 0.98 + (idx % 3)));
           return (
-            <div
+            <Card
               key={f.id}
-              className="p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md hover:shadow-2xl hover:border-blue-500/50 hover:-translate-y-1 transition-all flex flex-col justify-between group"
+              hoverLift
+              className="flex flex-col justify-between group"
             >
               <div>
                 {/* Top Row: Avatar + Headline + Trust Score */}
@@ -184,19 +186,19 @@ export const FreelancerDirectoryPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Link
                     to={`/freelancers/${f.id}`}
-                    className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 font-bold rounded-xl transition-colors border border-slate-200 dark:border-white/10"
+                    className="btn-secondary-surface px-3.5 py-2 text-xs font-bold"
                   >
                     View Profile
                   </Link>
                   <Link
                     to={`/customer/projects/create?freelancer_id=${f.id}`}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all shadow-xs"
+                    className="btn-primary-gradient px-4 py-2 text-xs font-bold"
                   >
                     Hire
                   </Link>
                 </div>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>

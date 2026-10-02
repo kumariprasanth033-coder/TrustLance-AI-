@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { adminApi, disputesApi, resetLocalDatabase } from '../services/api';
 import { Dispute } from '../types';
+import { Card } from '../components/ui/Card';
 
 export const AdminDashboardPage: React.FC = () => {
   const [metrics, setMetrics] = useState<any>(null);
@@ -104,7 +105,7 @@ export const AdminDashboardPage: React.FC = () => {
 
         <button
           onClick={handleResetData}
-          className="px-4 py-2 border border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+          className="btn-secondary-surface px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 gap-1.5"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Reset Platform DB</span>
@@ -122,7 +123,7 @@ export const AdminDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         
         {/* Left Admin Navigation Sidebar */}
-        <aside className="lg:col-span-1 bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 rounded-3xl p-4 shadow-xl">
+        <Card as="aside" className="lg:col-span-1 p-4 shadow-xl">
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 block mb-2">
             ADMIN MODULES
           </span>
@@ -153,7 +154,7 @@ export const AdminDashboardPage: React.FC = () => {
               );
             })}
           </nav>
-        </aside>
+        </Card>
 
         {/* Right Main Admin Dashboard View */}
         <div className="lg:col-span-4 space-y-6">
@@ -178,41 +179,41 @@ export const AdminDashboardPage: React.FC = () => {
 
           {/* Metrics Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md">
+            <Card hoverLift className="p-5">
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Total Users</span>
               <div className="mt-2.5 flex items-baseline gap-2 font-mono tabular-nums">
                 <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{metrics?.total_users || 7}</span>
                 <span className="text-[11px] text-slate-500 font-medium">({metrics?.customers || 1}c, {metrics?.freelancers || 5}f)</span>
               </div>
-            </div>
+            </Card>
 
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md">
+            <Card hoverLift className="p-5">
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Active Projects</span>
               <div className="mt-2.5 flex items-baseline gap-2 font-mono tabular-nums">
                 <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">{metrics?.active_projects || 3}</span>
                 <span className="text-[11px] text-blue-500 font-medium">in contract</span>
               </div>
-            </div>
+            </Card>
 
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md">
+            <Card hoverLift className="p-5">
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Escrow Held</span>
               <div className="mt-2.5 flex items-baseline gap-2 font-mono tabular-nums">
                 <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">${metrics?.escrow_held?.toFixed(2) || '1,600.00'}</span>
                 <span className="text-[11px] text-emerald-500 font-medium">vault locked</span>
               </div>
-            </div>
+            </Card>
 
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-md">
+            <Card hoverLift className="p-5">
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Open Disputes</span>
               <div className="mt-2.5 flex items-baseline gap-2 font-mono tabular-nums">
                 <span className="text-2xl font-extrabold text-rose-600">{metrics?.open_disputes || disputes.filter(d => d.status === 'OPEN').length}</span>
                 <span className="text-[11px] text-slate-500 font-medium">pending</span>
               </div>
-            </div>
+            </Card>
           </div>
 
           {/* Disputes Adjudication Console */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl space-y-4">
+          <Card className="p-6 sm:p-8 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">Escrow Dispute Adjudication</h3>
@@ -243,7 +244,7 @@ export const AdminDashboardPage: React.FC = () => {
                     {disp.status === 'OPEN' && (
                       <button
                         onClick={() => setSelectedDispute(disp)}
-                        className="px-4 py-2 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-bold rounded-xl whitespace-nowrap shadow-xs transition-all"
+                        className="btn-primary-gradient px-4 py-2 text-xs font-bold whitespace-nowrap"
                       >
                         Arbitrate Dispute
                       </button>
@@ -257,7 +258,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <span className="font-semibold text-slate-700 dark:text-slate-300">Zero pending disputes. Platform operations nominal.</span>
               </div>
             )}
-          </div>
+          </Card>
         </div>
       </div>
 
@@ -295,14 +296,14 @@ export const AdminDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleResolve('Release to Freelancer')}
-                className="py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold rounded-xl shadow-xs transition-all"
+                className="btn-primary-gradient py-3 text-xs font-bold"
               >
                 Release to Freelancer
               </button>
               <button
                 type="button"
                 onClick={() => handleResolve('Refund to Customer')}
-                className="py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-xs transition-all"
+                className="btn-secondary-surface py-3 text-xs font-bold"
               >
                 Refund Escrow to Client
               </button>

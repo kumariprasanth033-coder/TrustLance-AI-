@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Sparkles, ShieldCheck, CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { Card } from './ui/Card';
 
 interface TrustScoreRingProps {
   score: number;
@@ -118,7 +119,7 @@ export const AITrustScoreCard: React.FC<AITrustScoreCardProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className={`p-6 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-xl transition-all ${className}`}>
+    <Card className={`p-6 shadow-xl ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-white/5">
         <div className="flex items-center gap-2">
@@ -215,7 +216,7 @@ export const AITrustScoreCard: React.FC<AITrustScoreCardProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

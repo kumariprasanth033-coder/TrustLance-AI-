@@ -165,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
             <button
               onClick={() => setShowXAMPPModal(true)}
               title="View PHP 8.2 + MySQL Architecture"
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-xs font-mono font-medium text-slate-700 dark:text-slate-300 hover:border-blue-500 hover:text-blue-600 transition-colors"
+              className="hidden sm:inline-flex btn-secondary-surface px-2.5 py-1.5 text-xs font-mono font-medium gap-1.5"
             >
               <Server className="w-3.5 h-3.5 text-blue-500" />
               <span className="hidden xl:inline">PHP/MySQL</span>
@@ -334,13 +334,13 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
               <div className="flex items-center gap-2 sm:gap-2.5">
                 <Link
                   to="/login"
-                  className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 transition-colors"
+                  className="btn-secondary-surface px-3.5 py-1.5 text-xs font-semibold"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/onboarding"
-                  className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all"
+                  className="btn-primary-gradient px-4 py-1.5 text-xs font-semibold"
                 >
                   Get Started
                 </Link>
@@ -412,7 +412,7 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
                   setShowMobileMenu(false);
                   setShowXAMPPModal(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-xs font-mono font-medium text-slate-700 dark:text-slate-300"
+                className="btn-secondary-surface px-3 py-1.5 text-xs font-mono font-medium gap-1.5"
               >
                 <Server className="w-3.5 h-3.5 text-blue-500" />
                 <span>PHP/MySQL Architecture</span>
