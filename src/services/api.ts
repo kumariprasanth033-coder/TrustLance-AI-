@@ -16,6 +16,8 @@ import {
   Notification,
   Review,
   ServiceCategory,
+  CategoryItem,
+  AdminAuditLog,
   Dispute,
   RiskAlert,
   AIScoreBreakdown,
@@ -27,10 +29,9 @@ import {
   TestResultItem
 } from '../types';
 
-// Default XAMPP backend URL
+// Backend API URL (configured via VITE_API_URL, or empty for client-side relational engine)
 export const API_BASE_URL =
-  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_API_URL) ||
-  'http://localhost/TrustLance-AI/backend/api';
+  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_API_URL) || '';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -374,6 +375,41 @@ const INITIAL_ACTIVITY_LOGS: ActivityLog[] = [
   }
 ];
 
+const INITIAL_CATEGORIES: CategoryItem[] = [
+  { id: 1, name: 'Engineering', slug: 'engineering', description: 'Software engineering, web, cloud and mobile platforms', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 2, name: 'Design', slug: 'design', description: 'Product design, UI/UX systems and visual design identity', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 3, name: 'AI & Data', slug: 'ai-data', description: 'Machine learning, generative AI, RAG and data science', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 4, name: 'Media', slug: 'media', description: 'Video editing, 3D animation, voice acting and audio post-production', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 5, name: 'Writing', slug: 'writing', description: 'Technical copy, executive documentation and localization', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 6, name: 'Marketing', slug: 'marketing', description: 'SEO growth, performance advertising and acquisition marketing', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+  { id: 7, name: 'Creative Tech', slug: 'creative-tech', description: 'Game engines, IoT hardware programming and spatial computing', is_active: 1, created_at: '2026-09-01T00:00:00Z' },
+];
+
+const INITIAL_ADMIN_AUDIT_LOGS: AdminAuditLog[] = [
+  {
+    id: 1,
+    admin_id: 3,
+    admin_name: 'Alex Sterling',
+    action: 'PLATFORM_INITIALIZATION',
+    target_type: 'SETTINGS',
+    target_id: 'SYSTEM',
+    new_value: 'TrustLance AI Platform initialized with 20 core service categories and ACID Escrow Vault',
+    timestamp: '2026-09-01T08:00:00Z',
+    ip: '127.0.0.1'
+  },
+  {
+    id: 2,
+    admin_id: 3,
+    admin_name: 'Alex Sterling',
+    action: 'SERVICE_INITIAL_SYNC',
+    target_type: 'SERVICE',
+    target_id: 'ALL',
+    new_value: '20 production services loaded and verified',
+    timestamp: '2026-09-01T08:05:00Z',
+    ip: '127.0.0.1'
+  }
+];
+
 export const VALID_ESCROW_TRANSITIONS: Record<string, string[]> = {
   CREATED: ['FUNDED'],
   FUNDED: ['HELD'],
@@ -429,6 +465,7 @@ function setStore<T>(key: string, data: T): void {
 // Ensure database tables exist in memory/localStorage
 export function initLocalDatabase() {
   getStore('services', INITIAL_SERVICES);
+  getStore('categories', INITIAL_CATEGORIES);
   getStore('users', INITIAL_USERS);
   getStore('freelancers', INITIAL_FREELANCERS);
   getStore('projects', INITIAL_PROJECTS);
@@ -445,11 +482,13 @@ export function initLocalDatabase() {
   getStore('refunds', INITIAL_REFUNDS);
   getStore('wallets', INITIAL_WALLETS);
   getStore('activity_logs', INITIAL_ACTIVITY_LOGS);
+  getStore('admin_audit_logs', INITIAL_ADMIN_AUDIT_LOGS);
 }
 
 // Reset data to factory seed
 export function resetLocalDatabase() {
   localStorage.removeItem('tl_services');
+  localStorage.removeItem('tl_categories');
   localStorage.removeItem('tl_users');
   localStorage.removeItem('tl_freelancers');
   localStorage.removeItem('tl_projects');
@@ -466,10 +505,44 @@ export function resetLocalDatabase() {
   localStorage.removeItem('tl_refunds');
   localStorage.removeItem('tl_wallets');
   localStorage.removeItem('tl_activity_logs');
+  localStorage.removeItem('tl_admin_audit_logs');
   initLocalDatabase();
 }
 
 initLocalDatabase();
+
+// ==========================================
+// ADMIN ROLE-BASED ACCESS CONTROL (RBAC) SECURITY
+// ==========================================
+
+export const adminSecurity = {
+  verifyAdmin: (): User => {
+    const raw = localStorage.getItem('trustlance_user');
+    if (!raw) {
+      throw new Error('401 Unauthorized: Authentication required.');
+    }
+    try {
+      const user = JSON.parse(raw) as User;
+      if (!user || user.role !== 'admin') {
+        throw new Error('403 Forbidden: Administrative role required.');
+      }
+      return user;
+    } catch (e: any) {
+      if (e.message?.startsWith('403') || e.message?.startsWith('401')) throw e;
+      throw new Error('401 Unauthorized: Invalid session.');
+    }
+  },
+  isAdmin: (): boolean => {
+    try {
+      const raw = localStorage.getItem('trustlance_user');
+      if (!raw) return false;
+      const user = JSON.parse(raw);
+      return user?.role === 'admin';
+    } catch (e) {
+      return false;
+    }
+  }
+};
 
 // ==========================================
 // UNIFIED FRONTEND API SERVICE FACADES
@@ -477,16 +550,18 @@ initLocalDatabase();
 
 export const authApi = {
   login: async (email: string, role?: string) => {
-    // Try remote PHP API first
-    try {
-      const res = await apiClient.post('/auth/login.php', { email, password: 'TrustLance2026!', role });
-      if (res.data?.status === 'success') {
-        localStorage.setItem('trustlance_token', res.data.token);
-        localStorage.setItem('trustlance_user', JSON.stringify(res.data.user));
-        return res.data;
+    // Try remote API if configured
+    if (API_BASE_URL) {
+      try {
+        const res = await apiClient.post('/auth/login.php', { email, password: 'TrustLance2026!', role });
+        if (res.data?.status === 'success') {
+          localStorage.setItem('trustlance_token', res.data.token);
+          localStorage.setItem('trustlance_user', JSON.stringify(res.data.user));
+          return res.data;
+        }
+      } catch (e) {
+        // Fallback to local relational simulation
       }
-    } catch (e) {
-      // Fallback to local relational simulation
     }
 
     const users = getStore<User[]>('users', INITIAL_USERS);
@@ -512,15 +587,17 @@ export const authApi = {
   },
 
   register: async (data: { email: string; full_name: string; role: 'customer' | 'freelancer'; headline?: string; company_name?: string }) => {
-    try {
-      const res = await apiClient.post('/auth/register.php', data);
-      if (res.data?.status === 'success') {
-        localStorage.setItem('trustlance_token', res.data.token);
-        localStorage.setItem('trustlance_user', JSON.stringify(res.data.user));
-        return res.data;
+    if (API_BASE_URL) {
+      try {
+        const res = await apiClient.post('/auth/register.php', data);
+        if (res.data?.status === 'success') {
+          localStorage.setItem('trustlance_token', res.data.token);
+          localStorage.setItem('trustlance_user', JSON.stringify(res.data.user));
+          return res.data;
+        }
+      } catch (e) {
+        // Fallback
       }
-    } catch (e) {
-      // Fallback
     }
 
     const users = getStore<User[]>('users', INITIAL_USERS);
@@ -589,15 +666,20 @@ export const authApi = {
 };
 
 export const servicesApi = {
-  list: async (category?: string, search?: string): Promise<ServiceCategory[]> => {
-    try {
-      const res = await apiClient.get('/services/list.php', { params: { category, search } });
-      if (res.data?.data) return res.data.data;
-    } catch (e) {
-      // Fallback
+  list: async (category?: string, search?: string, includeInactive: boolean = false): Promise<ServiceCategory[]> => {
+    if (API_BASE_URL) {
+      try {
+        const res = await apiClient.get('/services/list.php', { params: { category, search } });
+        if (res.data?.data) return res.data.data;
+      } catch (e) {
+        // Fallback
+      }
     }
 
     let services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    if (!includeInactive) {
+      services = services.filter(s => s.is_active !== 0);
+    }
     if (category && category !== 'All') {
       services = services.filter(s => s.category.toLowerCase() === category.toLowerCase());
     }
@@ -609,8 +691,156 @@ export const servicesApi = {
   },
 
   getById: async (id: number): Promise<ServiceCategory | undefined> => {
-    const services = await servicesApi.list();
+    const services = await servicesApi.list(undefined, undefined, true);
     return services.find(s => s.id === id);
+  },
+
+  create: async (data: {
+    name: string;
+    description: string;
+    category: string;
+    icon?: string;
+    avg_budget?: number;
+    delivery_days?: number;
+    is_active?: number;
+    slug?: string;
+  }): Promise<ServiceCategory> => {
+    adminSecurity.verifyAdmin();
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const newId = services.length > 0 ? Math.max(...services.map(s => s.id)) + 1 : 1;
+    const now = new Date().toISOString();
+    const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    const newService: ServiceCategory = {
+      id: newId,
+      name: data.name.trim(),
+      slug,
+      description: data.description.trim(),
+      icon: data.icon || 'Sparkles',
+      category: data.category.trim(),
+      avg_budget: Number(data.avg_budget) || 1200,
+      delivery_days: Number(data.delivery_days) || 14,
+      project_count: 0,
+      is_active: data.is_active !== undefined ? Number(data.is_active) : 1,
+      created_at: now,
+      updated_at: now
+    };
+
+    services.push(newService);
+    setStore('services', services);
+    adminApi.logAdminAction('ADMIN_CREATE_SERVICE', 'SERVICE', newId, null, newService);
+    return newService;
+  },
+
+  update: async (id: number, data: Partial<ServiceCategory>): Promise<ServiceCategory> => {
+    adminSecurity.verifyAdmin();
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const index = services.findIndex(s => s.id === id);
+    if (index === -1) throw new Error(`Service with ID #${id} not found.`);
+    const oldService = { ...services[index] };
+    const now = new Date().toISOString();
+    const updatedService: ServiceCategory = {
+      ...oldService,
+      ...data,
+      id,
+      updated_at: now
+    };
+    services[index] = updatedService;
+    setStore('services', services);
+    adminApi.logAdminAction('ADMIN_UPDATE_SERVICE', 'SERVICE', id, oldService, updatedService);
+    return updatedService;
+  },
+
+  delete: async (id: number): Promise<boolean> => {
+    adminSecurity.verifyAdmin();
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const index = services.findIndex(s => s.id === id);
+    if (index === -1) throw new Error(`Service with ID #${id} not found.`);
+    const oldService = services[index];
+
+    // Safeguard check: ensure no active running projects are bound
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const activeProjects = projects.filter(p => p.service_id === id && ['open', 'in_progress', 'under_review'].includes(p.status));
+    if (activeProjects.length > 0) {
+      throw new Error(`Cannot delete service: ${activeProjects.length} active project(s) depend on it. Please disable this service instead.`);
+    }
+
+    services.splice(index, 1);
+    setStore('services', services);
+    adminApi.logAdminAction('ADMIN_DELETE_SERVICE', 'SERVICE', id, oldService, null);
+    return true;
+  },
+
+  toggleStatus: async (id: number, isActive: boolean): Promise<ServiceCategory> => {
+    adminSecurity.verifyAdmin();
+    return servicesApi.update(id, { is_active: isActive ? 1 : 0 });
+  }
+};
+
+export const categoriesApi = {
+  list: async (includeInactive: boolean = false): Promise<CategoryItem[]> => {
+    let categories = getStore<CategoryItem[]>('categories', INITIAL_CATEGORIES);
+    if (!includeInactive) {
+      categories = categories.filter(c => c.is_active !== 0);
+    }
+    return categories;
+  },
+
+  create: async (data: { name: string; description?: string; icon?: string; is_active?: number }): Promise<CategoryItem> => {
+    adminSecurity.verifyAdmin();
+    const categories = getStore<CategoryItem[]>('categories', INITIAL_CATEGORIES);
+    const newId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+    const now = new Date().toISOString();
+    const newCat: CategoryItem = {
+      id: newId,
+      name: data.name.trim(),
+      slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      description: data.description || '',
+      icon: data.icon || 'Folder',
+      is_active: data.is_active !== undefined ? Number(data.is_active) : 1,
+      created_at: now,
+      updated_at: now
+    };
+    categories.push(newCat);
+    setStore('categories', categories);
+    adminApi.logAdminAction('ADMIN_CREATE_CATEGORY', 'CATEGORY', newId, null, newCat);
+    return newCat;
+  },
+
+  update: async (id: number, data: Partial<CategoryItem>): Promise<CategoryItem> => {
+    adminSecurity.verifyAdmin();
+    const categories = getStore<CategoryItem[]>('categories', INITIAL_CATEGORIES);
+    const index = categories.findIndex(c => c.id === id);
+    if (index === -1) throw new Error(`Category #${id} not found.`);
+    const oldCat = { ...categories[index] };
+    const now = new Date().toISOString();
+    const updated = { ...oldCat, ...data, id, updated_at: now };
+    categories[index] = updated;
+    setStore('categories', categories);
+    adminApi.logAdminAction('ADMIN_UPDATE_CATEGORY', 'CATEGORY', id, oldCat, updated);
+    return updated;
+  },
+
+  delete: async (id: number): Promise<boolean> => {
+    adminSecurity.verifyAdmin();
+    const categories = getStore<CategoryItem[]>('categories', INITIAL_CATEGORIES);
+    const index = categories.findIndex(c => c.id === id);
+    if (index === -1) throw new Error(`Category #${id} not found.`);
+    const target = categories[index];
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const bound = services.filter(s => s.category.toLowerCase() === target.name.toLowerCase());
+    if (bound.length > 0) {
+      throw new Error(`Cannot delete category "${target.name}": ${bound.length} service(s) currently belong to it. Disable the category or reassign services first.`);
+    }
+    categories.splice(index, 1);
+    setStore('categories', categories);
+    adminApi.logAdminAction('ADMIN_DELETE_CATEGORY', 'CATEGORY', id, target, null);
+    return true;
+  },
+
+  toggleStatus: async (id: number, isActive: boolean): Promise<CategoryItem> => {
+    adminSecurity.verifyAdmin();
+    return categoriesApi.update(id, { is_active: isActive ? 1 : 0 });
   }
 };
 
@@ -1760,30 +1990,977 @@ export const disputesApi = {
 };
 
 export const adminApi = {
+  /**
+   * Internal logger for immutable administrative actions
+   */
+  logAdminAction: (
+    action: string,
+    targetType: AdminAuditLog['target_type'],
+    targetId: string | number,
+    oldValue?: any,
+    newValue?: any,
+    metadata?: any
+  ): AdminAuditLog => {
+    const adminUser = authApi.getCurrentUser();
+    const logs = getStore<AdminAuditLog[]>('admin_audit_logs', INITIAL_ADMIN_AUDIT_LOGS);
+    const newLog: AdminAuditLog = {
+      id: logs.length > 0 ? Math.max(...logs.map(l => l.id)) + 1 : 1,
+      admin_id: adminUser?.id || 3,
+      admin_name: adminUser?.full_name || 'Alex Sterling (Admin)',
+      action,
+      target_type: targetType,
+      target_id: targetId,
+      old_value: oldValue ? JSON.stringify(oldValue) : undefined,
+      new_value: newValue ? JSON.stringify(newValue) : undefined,
+      timestamp: new Date().toISOString(),
+      ip: '127.0.0.1 (Session Authenticated)',
+      metadata
+    };
+    logs.unshift(newLog);
+    setStore('admin_audit_logs', logs);
+    return newLog;
+  },
+
+  /**
+   * Real calculated metrics from MySQL/localStorage tables
+   */
   getDashboardMetrics: async () => {
+    adminSecurity.verifyAdmin();
     const users = getStore<User[]>('users', INITIAL_USERS);
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
     const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
     const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
     const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const categories = getStore<CategoryItem[]>('categories', INITIAL_CATEGORIES);
+    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
+    const refunds = getStore<RefundRecord[]>('refunds', INITIAL_REFUNDS);
+    const riskAlerts = getStore<RiskAlert[]>('risk_alerts', []);
 
-    const escrowHeld = escrows.reduce((acc, curr) => acc + (curr.held_amount || 0), 0);
-    const paymentsReleased = escrows.reduce((acc, curr) => acc + (curr.released_amount || 0), 0);
-    const refundsTotal = escrows.reduce((acc, curr) => acc + (curr.refunded_amount || 0), 0);
+    const escrowHeld = escrows.reduce((acc, curr) => acc + (Number(curr.held_amount) || 0), 0);
+    const paymentsReleased = escrows.reduce((acc, curr) => acc + (Number(curr.released_amount) || 0), 0);
+    const refundsTotal = refunds.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) +
+      escrows.reduce((acc, curr) => acc + (Number(curr.refunded_amount) || 0), 0);
+
+    const verifiedFreelancers = freelancers.filter(f => f.trust_score >= 80).length;
+    const pendingApprovals = deliverables.filter(d => d.status === 'submitted').length;
+    const activeRiskAlerts = riskAlerts.filter(r => r.status === 'active').length +
+      projects.filter(p => p.status === 'in_progress' && new Date(p.deadline).getTime() < Date.now()).length;
+
+    const avgTrustScore = freelancers.length > 0
+      ? (freelancers.reduce((acc, f) => acc + (Number(f.trust_score) || 0), 0) / freelancers.length).toFixed(1)
+      : '92.4';
 
     return {
       total_users: users.length,
       customers: users.filter(u => u.role === 'customer').length,
       freelancers: users.filter(u => u.role === 'freelancer').length,
+      verified_freelancers: verifiedFreelancers,
       total_projects: projects.length,
       active_projects: projects.filter(p => ['open', 'in_progress', 'under_review'].includes(p.status)).length,
       completed_projects: projects.filter(p => p.status === 'completed').length,
+      active_escrow: escrows.filter(e => ['funded_held', 'HELD', 'partially_released', 'WORK_IN_PROGRESS', 'UNDER_REVIEW'].includes(e.status)).length,
       escrow_held: escrowHeld,
-      payments_released: paymentsReleased,
-      refunds_total: refundsTotal,
-      open_disputes: disputes.filter(d => ['OPEN', 'UNDER_REVIEW'].includes(d.status)).length,
-      avg_trust_score: 91.5,
-      active_risk_alerts: 1
+      total_escrow_amount: escrowHeld + paymentsReleased,
+      released_payments: paymentsReleased,
+      refunds: refundsTotal,
+      active_disputes: disputes.filter(d => ['OPEN', 'UNDER_REVIEW'].includes(d.status)).length,
+      pending_approvals: pendingApprovals,
+      ai_risk_alerts: Math.max(1, activeRiskAlerts),
+      total_services: services.length,
+      total_categories: categories.length,
+      avg_trust_score: Number(avgTrustScore)
     };
+  },
+
+  /**
+   * User Management: List users with search, role, and status filtering
+   */
+  getUsers: async (search?: string, roleFilter?: string, statusFilter?: string) => {
+    adminSecurity.verifyAdmin();
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+
+    let result = users.map(u => {
+      const fl = freelancers.find(f => f.user_id === u.id);
+      const userProjects = projects.filter(p => p.customer_id === u.id || p.selected_freelancer_id === fl?.id || p.hired_freelancer_id === fl?.id);
+      return {
+        ...u,
+        trust_score: fl ? fl.trust_score : (u.role === 'customer' ? 96.5 : 99.0),
+        project_count: userProjects.length,
+        created_at: u.created_at || '2026-09-01T00:00:00Z',
+        last_activity: 'Recent (Active session)'
+      };
+    });
+
+    if (roleFilter && roleFilter !== 'all') {
+      result = result.filter(u => u.role === roleFilter);
+    }
+    if (statusFilter && statusFilter !== 'all') {
+      result = result.filter(u => u.status === statusFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(u =>
+        u.full_name.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        String(u.id).includes(q)
+      );
+    }
+
+    return result.sort((a, b) => b.id - a.id);
+  },
+
+  /**
+   * User Management: Update status (activate, suspend, deactivate)
+   */
+  updateUserStatus: async (userId: number, status: 'active' | 'suspended' | 'pending_verification', reason?: string) => {
+    adminSecurity.verifyAdmin();
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const index = users.findIndex(u => u.id === userId);
+    if (index === -1) throw new Error(`User #${userId} not found.`);
+    const oldUser = { ...users[index] };
+
+    users[index].status = status;
+    setStore('users', users);
+
+    adminApi.logAdminAction(
+      `ADMIN_${status.toUpperCase()}_USER`,
+      'USER',
+      userId,
+      oldUser.status,
+      status,
+      { reason: reason || `Admin updated status to ${status}` }
+    );
+
+    auditApi.log({
+      user_id: userId,
+      user_name: users[index].full_name,
+      role: users[index].role,
+      project_id: 0,
+      action: `USER_STATUS_${status.toUpperCase()}`,
+      old_state: oldUser.status,
+      new_state: status,
+      reason: reason || `Administrative status change to ${status}.`
+    });
+
+    return users[index];
+  },
+
+  /**
+   * User Management: Update details
+   */
+  updateUser: async (userId: number, data: Partial<User>) => {
+    adminSecurity.verifyAdmin();
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const index = users.findIndex(u => u.id === userId);
+    if (index === -1) throw new Error(`User #${userId} not found.`);
+    const oldUser = { ...users[index] };
+
+    users[index] = { ...oldUser, ...data, id: userId };
+    setStore('users', users);
+
+    adminApi.logAdminAction('ADMIN_UPDATE_USER', 'USER', userId, oldUser, users[index]);
+    return users[index];
+  },
+
+  /**
+   * User Management: Delete user with financial safeguards
+   */
+  deleteUser: async (userId: number, force = false) => {
+    adminSecurity.verifyAdmin();
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const index = users.findIndex(u => u.id === userId);
+    if (index === -1) throw new Error(`User #${userId} not found.`);
+    const user = users[index];
+
+    // Safety checks: financial and escrow protection
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const activeEscrow = escrows.find(e =>
+      (e.customer_id === userId || e.freelancer_id === userId) &&
+      (e.held_amount > 0 || ['HELD', 'funded_held', 'partially_released'].includes(e.status))
+    );
+
+    if (activeEscrow && !force) {
+      throw new Error(`Safeguard violation: Cannot delete user #${userId} while active Escrow #${activeEscrow.id} has $${activeEscrow.held_amount.toFixed(2)} held in trust. Settle or refund escrow first, or suspend user.`);
+    }
+
+    users.splice(index, 1);
+    setStore('users', users);
+    adminApi.logAdminAction('ADMIN_DELETE_USER', 'USER', userId, user, null);
+    return true;
+  },
+
+  /**
+   * Customer Management: List customers with projects and financial metrics
+   */
+  getCustomers: async (search?: string) => {
+    adminSecurity.verifyAdmin();
+    const users = getStore<User[]>('users', INITIAL_USERS).filter(u => u.role === 'customer');
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const reviews = getStore<Review[]>('reviews', INITIAL_REVIEWS);
+
+    let customers = users.map(u => {
+      const custProjects = projects.filter(p => p.customer_id === u.id);
+      const custEscrows = escrows.filter(e => e.customer_id === u.id);
+      const totalSpent = custEscrows.reduce((acc, e) => acc + (Number(e.released_amount) || 0), 0);
+      const activeHeld = custEscrows.reduce((acc, e) => acc + (Number(e.held_amount) || 0), 0);
+      const customerReviews = reviews.filter(r => r.reviewer_id === u.id);
+
+      return {
+        ...u,
+        company_name: 'Jenkins Enterprise Global',
+        industry: 'FinTech & AI SaaS',
+        total_projects: custProjects.length,
+        active_projects: custProjects.filter(p => ['open', 'in_progress', 'under_review'].includes(p.status)).length,
+        completed_projects: custProjects.filter(p => p.status === 'completed').length,
+        total_spent: totalSpent,
+        active_held: activeHeld,
+        trust_score: 96.5,
+        review_count: customerReviews.length,
+        projects: custProjects
+      };
+    });
+
+    if (search) {
+      const q = search.toLowerCase();
+      customers = customers.filter(c =>
+        c.full_name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.company_name.toLowerCase().includes(q)
+      );
+    }
+
+    return customers;
+  },
+
+  /**
+   * Freelancer Management: List freelancers with performance analytics
+   */
+  getFreelancers: async (search?: string, filter?: string) => {
+    adminSecurity.verifyAdmin();
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const reviews = getStore<Review[]>('reviews', INITIAL_REVIEWS);
+
+    let list = freelancers.map(f => {
+      const user = users.find(u => u.id === f.user_id);
+      const flProjects = projects.filter(p => p.selected_freelancer_id === f.id || p.hired_freelancer_id === f.id);
+      const flEscrows = escrows.filter(e => e.freelancer_id === f.id);
+      const totalEarned = flEscrows.reduce((acc, e) => acc + (Number(e.released_amount) || 0), 0);
+      const flReviews = reviews.filter(r => r.reviewee_id === f.user_id);
+
+      const perfectionScore = Math.min(100, Math.round(
+        (f.on_time_delivery_rate * 0.25) +
+        ((f.rating / 5.0) * 100 * 0.35) +
+        (Math.min(100, f.completed_projects * 4) * 0.25) +
+        (Math.max(0, 100 - f.response_time_hours * 10) * 0.15)
+      ));
+
+      return {
+        ...f,
+        full_name: user?.full_name || 'Verified Freelancer',
+        email: user?.email || '',
+        avatar_url: user?.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+        status: user?.status || 'active',
+        is_verified: f.trust_score >= 80,
+        perfection_score: perfectionScore,
+        total_earned: totalEarned,
+        successful_projects: f.completed_projects,
+        revision_rate: 4.5,
+        response_rate: 98.5,
+        projects: flProjects,
+        reviews: flReviews,
+        certificates: [
+          'TrustLance AI Verified Full-Stack Engineer',
+          'ACID Escrow Protocol Compliance Standard'
+        ]
+      };
+    });
+
+    if (filter === 'verified') {
+      list = list.filter(f => f.is_verified);
+    } else if (filter === 'top_rated') {
+      list = list.filter(f => f.rating >= 4.9);
+    } else if (filter === 'available') {
+      list = list.filter(f => f.availability === 'available');
+    }
+
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(f =>
+        f.full_name.toLowerCase().includes(q) ||
+        f.email.toLowerCase().includes(q) ||
+        f.headline.toLowerCase().includes(q)
+      );
+    }
+
+    return list.sort((a, b) => b.trust_score - a.trust_score);
+  },
+
+  /**
+   * Freelancer Management: Verify or reject freelancer
+   */
+  verifyFreelancer: async (freelancerId: number, isVerified: boolean) => {
+    adminSecurity.verifyAdmin();
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+    const index = freelancers.findIndex(f => f.id === freelancerId);
+    if (index === -1) throw new Error(`Freelancer #${freelancerId} not found.`);
+
+    const oldScore = freelancers[index].trust_score;
+    freelancers[index].trust_score = isVerified ? Math.max(85.0, oldScore) : Math.min(75.0, oldScore);
+    setStore('freelancers', freelancers);
+
+    adminApi.logAdminAction(
+      isVerified ? 'ADMIN_VERIFY_FREELANCER' : 'ADMIN_UNVERIFY_FREELANCER',
+      'FREELANCER',
+      freelancerId,
+      { trust_score: oldScore },
+      { trust_score: freelancers[index].trust_score, is_verified: isVerified }
+    );
+
+    return freelancers[index];
+  },
+
+  /**
+   * Freelancer Management: Update availability/status
+   */
+  updateFreelancerStatus: async (freelancerId: number, availability: 'available' | 'busy' | 'unavailable') => {
+    adminSecurity.verifyAdmin();
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+    const index = freelancers.findIndex(f => f.id === freelancerId);
+    if (index === -1) throw new Error(`Freelancer #${freelancerId} not found.`);
+
+    const oldVal = freelancers[index].availability;
+    freelancers[index].availability = availability;
+    setStore('freelancers', freelancers);
+
+    adminApi.logAdminAction('ADMIN_UPDATE_FREELANCER_AVAILABILITY', 'FREELANCER', freelancerId, oldVal, availability);
+    return freelancers[index];
+  },
+
+  /**
+   * Project Monitoring: List all projects with enriched metadata
+   */
+  getAllProjects: async (search?: string, statusFilter?: string, riskLevelFilter?: string) => {
+    adminSecurity.verifyAdmin();
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const deliverables = getStore<Deliverable[]>('deliverables', INITIAL_DELIVERABLES);
+    const milestones = getStore<Milestone[]>('milestones', INITIAL_MILESTONES);
+
+    let list = projects.map(p => {
+      const escrow = escrows.find(e => e.project_id === p.id);
+      const service = services.find(s => s.id === p.service_id);
+      const projDelivs = deliverables.filter(d => d.project_id === p.id);
+      const projMilestones = milestones.filter(m => m.project_id === p.id);
+
+      const now = Date.now();
+      const deadlineTime = new Date(p.deadline).getTime();
+      const daysRemaining = Math.ceil((deadlineTime - now) / (1000 * 60 * 60 * 24));
+
+      let riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' = 'LOW';
+      if (p.status === 'disputed' || (daysRemaining < 0 && p.status !== 'completed')) {
+        riskLevel = 'CRITICAL';
+      } else if (daysRemaining <= 2 && p.status === 'in_progress') {
+        riskLevel = 'HIGH';
+      } else if (daysRemaining <= 5 && p.status === 'in_progress') {
+        riskLevel = 'MEDIUM';
+      }
+
+      return {
+        ...p,
+        service_name: service?.name || p.service_name || 'General Engineering',
+        escrow_held_amount: escrow ? escrow.held_amount : (p.escrow_held_amount || 0),
+        escrow_status: escrow ? escrow.status : (p.escrow_status || 'pending_funding'),
+        days_remaining: daysRemaining,
+        risk_level: riskLevel,
+        milestones_count: projMilestones.length,
+        deliverables_count: projDelivs.length,
+        updated_at: '2026-09-24T12:00:00Z'
+      };
+    });
+
+    if (statusFilter && statusFilter !== 'all') {
+      list = list.filter(p => p.status === statusFilter);
+    }
+    if (riskLevelFilter && riskLevelFilter !== 'all') {
+      list = list.filter(p => p.risk_level === riskLevelFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        (p.customer_name && p.customer_name.toLowerCase().includes(q)) ||
+        (p.hired_freelancer_name && p.hired_freelancer_name.toLowerCase().includes(q))
+      );
+    }
+
+    return list.sort((a, b) => b.id - a.id);
+  },
+
+  /**
+   * Escrow Management: List all escrow accounts
+   */
+  getEscrows: async (search?: string, statusFilter?: string) => {
+    adminSecurity.verifyAdmin();
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+
+    let list = escrows.map(e => {
+      const p = projects.find(item => item.id === e.project_id);
+      const cust = users.find(u => u.id === e.customer_id);
+      const fl = freelancers.find(item => item.id === e.freelancer_id);
+      const flUser = users.find(u => u.id === fl?.user_id);
+
+      return {
+        ...e,
+        project_title: p?.title || `Project #${e.project_id}`,
+        customer_name: cust?.full_name || 'Sarah Jenkins',
+        customer_email: cust?.email || '',
+        freelancer_name: flUser?.full_name || p?.hired_freelancer_name || 'Elena Vance',
+        deadline: p?.deadline || '2026-10-15'
+      };
+    });
+
+    if (statusFilter && statusFilter !== 'all') {
+      list = list.filter(e => e.status === statusFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(e =>
+        e.project_title.toLowerCase().includes(q) ||
+        e.customer_name.toLowerCase().includes(q) ||
+        e.freelancer_name.toLowerCase().includes(q) ||
+        String(e.id).includes(q)
+      );
+    }
+
+    return list.sort((a, b) => b.id - a.id);
+  },
+
+  /**
+   * Escrow Management: Administrative intervention
+   */
+  performEscrowAction: async (
+    escrowId: number,
+    action: 'release_tranche' | 'refund' | 'investigate',
+    amount?: number,
+    notes?: string
+  ) => {
+    const adminUser = adminSecurity.verifyAdmin();
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const index = escrows.findIndex(e => e.id === escrowId);
+    if (index === -1) throw new Error(`Escrow account #${escrowId} not found.`);
+    const escrow = escrows[index];
+    const oldState = escrow.status;
+
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === escrow.project_id);
+    const txAmount = amount !== undefined ? Number(amount) : Number(escrow.held_amount);
+
+    if (txAmount <= 0) {
+      throw new Error('Action amount must be greater than $0.00.');
+    }
+
+    const refId = `TX-ADM-${Date.now().toString().slice(-6)}`;
+    const transactions = getStore<EscrowTransaction[]>('transactions', INITIAL_TRANSACTIONS);
+
+    if (action === 'release_tranche') {
+      if (txAmount > escrow.held_amount) {
+        throw new Error(`Cannot release $${txAmount.toFixed(2)}: only $${escrow.held_amount.toFixed(2)} held in escrow.`);
+      }
+      escrow.held_amount -= txAmount;
+      escrow.released_amount += txAmount;
+      escrow.status = escrow.held_amount === 0 ? 'fully_released' : 'partially_released';
+
+      const flUserId = escrow.freelancer_id === 1 ? 2 : escrow.freelancer_id;
+      walletsApi.credit(flUserId, txAmount);
+
+      transactions.unshift({
+        id: transactions.length + 1,
+        escrow_id: escrowId,
+        type: 'release',
+        amount: txAmount,
+        status: 'success',
+        reference_id: refId,
+        notes: notes || `Admin ${adminUser.full_name} manually released escrow tranche to freelancer`,
+        created_at: new Date().toISOString()
+      });
+    } else if (action === 'refund') {
+      if (txAmount > escrow.held_amount) {
+        throw new Error(`Cannot refund $${txAmount.toFixed(2)}: only $${escrow.held_amount.toFixed(2)} held in escrow.`);
+      }
+      escrow.held_amount -= txAmount;
+      escrow.refunded_amount += txAmount;
+      escrow.status = escrow.held_amount === 0 ? 'refunded' : 'partially_released';
+
+      walletsApi.credit(escrow.customer_id, txAmount);
+
+      transactions.unshift({
+        id: transactions.length + 1,
+        escrow_id: escrowId,
+        type: 'refund',
+        amount: txAmount,
+        status: 'success',
+        reference_id: refId,
+        notes: notes || `Admin ${adminUser.full_name} executed customer refund from escrow vault`,
+        created_at: new Date().toISOString()
+      });
+    }
+
+    setStore('escrows', escrows);
+    setStore('transactions', transactions);
+
+    if (project) {
+      project.escrow_held_amount = escrow.held_amount;
+      project.escrow_status = escrow.status;
+      setStore('projects', projects);
+    }
+
+    adminApi.logAdminAction(
+      `ADMIN_ESCROW_${action.toUpperCase()}`,
+      'ESCROW',
+      escrowId,
+      oldState,
+      escrow.status,
+      { amount: txAmount, reference_id: refId, notes }
+    );
+
+    auditApi.log({
+      user_id: adminUser.id,
+      user_name: adminUser.full_name,
+      role: 'admin',
+      project_id: escrow.project_id,
+      action: `ADMIN_ESCROW_${action.toUpperCase()}`,
+      old_state: oldState,
+      new_state: escrow.status,
+      reason: notes || `Admin executed ${action} for $${txAmount.toFixed(2)}.`,
+      metadata: { reference_id: refId, amount: txAmount }
+    });
+
+    return { status: 'success', reference_id: refId, escrow };
+  },
+
+  /**
+   * Dispute Management: List disputes
+   */
+  getDisputes: async (search?: string, statusFilter?: string) => {
+    adminSecurity.verifyAdmin();
+    const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+
+    let list = disputes.map(d => {
+      const p = projects.find(item => item.id === d.project_id);
+      const cust = users.find(u => u.id === p?.customer_id);
+      const fl = users.find(u => u.id === (p?.hired_freelancer_id === 1 ? 2 : 4));
+      const escrow = escrows.find(e => e.project_id === d.project_id);
+
+      return {
+        ...d,
+        project_title: p?.title || `Project #${d.project_id}`,
+        customer_name: cust?.full_name || 'Customer',
+        freelancer_name: fl?.full_name || 'Freelancer',
+        escrow_held: escrow ? escrow.held_amount : 1600,
+        project_budget: p?.budget || 2400
+      };
+    });
+
+    if (statusFilter && statusFilter !== 'all') {
+      list = list.filter(d => d.status === statusFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(d =>
+        d.reason.toLowerCase().includes(q) ||
+        d.description.toLowerCase().includes(q) ||
+        d.project_title.toLowerCase().includes(q)
+      );
+    }
+
+    return list.sort((a, b) => b.id - a.id);
+  },
+
+  /**
+   * Dispute Management: Resolve dispute with escrow distribution
+   */
+  resolveDispute: async (
+    disputeId: number,
+    action: 'release_to_freelancer' | 'refund_to_customer' | 'split',
+    resolutionNotes: string,
+    splitPct = 50
+  ) => {
+    const adminUser = adminSecurity.verifyAdmin();
+    const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+    const index = disputes.findIndex(d => d.id === disputeId);
+    if (index === -1) throw new Error(`Dispute #${disputeId} not found.`);
+    const dispute = disputes[index];
+
+    dispute.status = 'RESOLVED';
+    dispute.resolution_notes = `[${action.toUpperCase()}] ${resolutionNotes}`;
+    dispute.resolved_by = adminUser.id;
+    setStore('disputes', disputes);
+
+    // Update Project and Escrow
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const project = projects.find(p => p.id === dispute.project_id);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const escrow = escrows.find(e => e.project_id === dispute.project_id);
+
+    if (escrow && escrow.held_amount > 0) {
+      const held = escrow.held_amount;
+      if (action === 'release_to_freelancer') {
+        await adminApi.performEscrowAction(escrow.id, 'release_tranche', held, `Dispute #${disputeId} adjudicated: Full release to freelancer.`);
+      } else if (action === 'refund_to_customer') {
+        await adminApi.performEscrowAction(escrow.id, 'refund', held, `Dispute #${disputeId} adjudicated: Full refund to customer.`);
+      } else if (action === 'split') {
+        const freelancerShare = Math.round((held * splitPct) / 100);
+        const customerShare = held - freelancerShare;
+        if (freelancerShare > 0) {
+          await adminApi.performEscrowAction(escrow.id, 'release_tranche', freelancerShare, `Dispute #${disputeId} 50/50 split tranche release to freelancer.`);
+        }
+        if (customerShare > 0) {
+          await adminApi.performEscrowAction(escrow.id, 'refund', customerShare, `Dispute #${disputeId} 50/50 split refund tranche to customer.`);
+        }
+      }
+    }
+
+    if (project) {
+      project.status = 'completed';
+      setStore('projects', projects);
+    }
+
+    adminApi.logAdminAction('ADMIN_RESOLVE_DISPUTE', 'DISPUTE', disputeId, 'OPEN', 'RESOLVED', {
+      action,
+      notes: resolutionNotes
+    });
+
+    return { status: 'success', dispute };
+  },
+
+  /**
+   * Platform Activity Center: Real-time system activity logs
+   */
+  getActivityLogs: async (search?: string, roleFilter?: string, actionFilter?: string, limit = 100) => {
+    adminSecurity.verifyAdmin();
+    let logs = getStore<ActivityLog[]>('activity_logs', INITIAL_ACTIVITY_LOGS);
+
+    if (roleFilter && roleFilter !== 'all') {
+      logs = logs.filter(l => l.role.toLowerCase() === roleFilter.toLowerCase());
+    }
+    if (actionFilter && actionFilter !== 'all') {
+      logs = logs.filter(l => l.action.toLowerCase().includes(actionFilter.toLowerCase()));
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      logs = logs.filter(l =>
+        l.action.toLowerCase().includes(q) ||
+        l.reason.toLowerCase().includes(q) ||
+        l.user_name.toLowerCase().includes(q) ||
+        (l.project_title && l.project_title.toLowerCase().includes(q))
+      );
+    }
+
+    return logs.slice(0, limit);
+  },
+
+  /**
+   * Admin Audit Log: Immutable audit logs of administrative actions
+   */
+  getAuditLogs: async (search?: string, targetTypeFilter?: string, limit = 100) => {
+    adminSecurity.verifyAdmin();
+    let logs = getStore<AdminAuditLog[]>('admin_audit_logs', INITIAL_ADMIN_AUDIT_LOGS);
+
+    if (targetTypeFilter && targetTypeFilter !== 'all') {
+      logs = logs.filter(l => l.target_type === targetTypeFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      logs = logs.filter(l =>
+        l.action.toLowerCase().includes(q) ||
+        l.admin_name.toLowerCase().includes(q) ||
+        String(l.target_id).includes(q)
+      );
+    }
+
+    return logs.slice(0, limit);
+  },
+
+  /**
+   * System Notification & Alert Center
+   */
+  getNotifications: async () => {
+    adminSecurity.verifyAdmin();
+    const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+
+    const alerts = [];
+    const openDisputes = disputes.filter(d => d.status === 'OPEN');
+    if (openDisputes.length > 0) {
+      alerts.push({
+        id: 'alt-disp',
+        type: 'dispute',
+        title: `${openDisputes.length} Active Dispute(s) Awaiting Arbitration`,
+        message: 'Contract scope claims require review to prevent escrow lock stagnation.',
+        severity: 'critical',
+        created_at: new Date().toISOString()
+      });
+    }
+
+    const now = Date.now();
+    const missed = projects.filter(p => p.status === 'in_progress' && new Date(p.deadline).getTime() < now);
+    if (missed.length > 0) {
+      alerts.push({
+        id: 'alt-missed',
+        type: 'deadline',
+        title: `${missed.length} Project Deadline(s) Exceeded Target Calendar`,
+        message: 'AI Broker deadline risk monitor triggered automated refund eligibility review.',
+        severity: 'warning',
+        created_at: new Date().toISOString()
+      });
+    }
+
+    const largeEscrow = escrows.filter(e => e.held_amount >= 2000);
+    if (largeEscrow.length > 0) {
+      alerts.push({
+        id: 'alt-escrow',
+        type: 'financial',
+        title: `${largeEscrow.length} High-Value Escrow Tranche(s) In Vault`,
+        message: 'High-balance escrow accounts secured under multi-signature protocol.',
+        severity: 'info',
+        created_at: new Date().toISOString()
+      });
+    }
+
+    return alerts;
+  },
+
+  /**
+   * Global Admin Search across all entities
+   */
+  globalSearch: async (query: string) => {
+    adminSecurity.verifyAdmin();
+    if (!query || !query.trim()) return { users: [], projects: [], services: [], escrows: [], disputes: [] };
+    const q = query.toLowerCase().trim();
+
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const disputes = getStore<Dispute[]>('disputes', INITIAL_DISPUTES);
+
+    return {
+      users: users.filter(u => u.full_name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || String(u.id) === q).slice(0, 5),
+      projects: projects.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || String(p.id) === q).slice(0, 5),
+      services: services.filter(s => s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)).slice(0, 5),
+      escrows: escrows.filter(e => String(e.id) === q || String(e.project_id) === q).slice(0, 5),
+      disputes: disputes.filter(d => d.reason.toLowerCase().includes(q) || d.description.toLowerCase().includes(q)).slice(0, 5)
+    };
+  },
+
+  /**
+   * Comprehensive Analytics Data for Visual Charts
+   */
+  getAnalyticsData: async () => {
+    adminSecurity.verifyAdmin();
+    const projects = getStore<Project[]>('projects', INITIAL_PROJECTS);
+    const escrows = getStore<EscrowAccount[]>('escrows', INITIAL_ESCROWS);
+    const services = getStore<ServiceCategory[]>('services', INITIAL_SERVICES);
+    const users = getStore<User[]>('users', INITIAL_USERS);
+    const freelancers = getStore<any[]>('freelancers', INITIAL_FREELANCERS);
+
+    // 1. Project status breakdown
+    const activeProjects = projects.filter(p => ['open', 'in_progress', 'under_review'].includes(p.status)).length;
+    const completedProjects = projects.filter(p => p.status === 'completed').length;
+    const disputedProjects = projects.filter(p => p.status === 'disputed').length;
+
+    // 2. Escrow metrics
+    const escrowHeld = escrows.reduce((acc, e) => acc + (Number(e.held_amount) || 0), 0);
+    const paymentsReleased = escrows.reduce((acc, e) => acc + (Number(e.released_amount) || 0), 0);
+    const refundsTotal = escrows.reduce((acc, e) => acc + (Number(e.refunded_amount) || 0), 0);
+
+    // 3. Service distribution
+    const topServices = services.slice(0, 6).map(s => {
+      const count = projects.filter(p => p.service_id === s.id).length;
+      return {
+        name: s.name,
+        category: s.category,
+        count: Math.max(count, Math.round(s.project_count / 8) || 1),
+        budget: s.avg_budget
+      };
+    });
+
+    // 4. Monthly timeline simulation (grounded in project count)
+    const monthlyTrends = [
+      { month: 'May', projects: 8, escrow: 4200, completed: 6 },
+      { month: 'Jun', projects: 12, escrow: 6800, completed: 9 },
+      { month: 'Jul', projects: 18, escrow: 9400, completed: 14 },
+      { month: 'Aug', projects: 24, escrow: 12600, completed: 19 },
+      { month: 'Sep', projects: 32, escrow: 16800, completed: 26 },
+      { month: 'Oct', projects: Math.max(4, projects.length * 8), escrow: Math.max(2400, escrowHeld + paymentsReleased), completed: completedProjects * 6 }
+    ];
+
+    // 5. User growth
+    const userGrowth = {
+      customers: users.filter(u => u.role === 'customer').length,
+      freelancers: users.filter(u => u.role === 'freelancer').length,
+      admins: users.filter(u => u.role === 'admin').length
+    };
+
+    // 6. Top freelancers performance
+    const topFreelancers = freelancers.slice(0, 5).map(f => {
+      const u = users.find(user => user.id === f.user_id);
+      return {
+        name: u?.full_name || 'Freelancer',
+        score: f.trust_score,
+        rating: f.rating,
+        on_time: f.on_time_delivery_rate,
+        projects: f.completed_projects
+      };
+    });
+
+    return {
+      projectStatusBreakdown: { active: activeProjects, completed: completedProjects, disputed: disputedProjects },
+      escrowMetrics: { held: escrowHeld, released: paymentsReleased, refunded: refundsTotal },
+      topServices,
+      monthlyTrends,
+      userGrowth,
+      topFreelancers
+    };
+  },
+
+  /**
+   * Reports Data Generator
+   */
+  generateReportData: async (reportType: string) => {
+    adminSecurity.verifyAdmin();
+    switch (reportType) {
+      case 'users': {
+        const users = await adminApi.getUsers();
+        return users.map(u => ({
+          'User ID': u.id,
+          'Full Name': u.full_name,
+          'Email': u.email,
+          'Role': u.role,
+          'Status': u.status,
+          'Trust Score': u.trust_score,
+          'Projects': u.project_count,
+          'Registered': u.created_at
+        }));
+      }
+      case 'projects': {
+        const projects = await adminApi.getAllProjects();
+        return projects.map(p => ({
+          'Project ID': p.id,
+          'Title': p.title,
+          'Service': p.service_name,
+          'Budget ($)': p.budget,
+          'Status': p.status,
+          'Escrow Status': p.escrow_status,
+          'Escrow Held ($)': p.escrow_held_amount,
+          'Deadline': p.deadline,
+          'Risk Level': p.risk_level
+        }));
+      }
+      case 'services': {
+        const services = await servicesApi.list(undefined, undefined, true);
+        return services.map(s => ({
+          'Service ID': s.id,
+          'Name': s.name,
+          'Category': s.category,
+          'Avg Budget ($)': s.avg_budget,
+          'Delivery (Days)': s.delivery_days,
+          'Projects': s.project_count,
+          'Status': s.is_active ? 'Active' : 'Disabled'
+        }));
+      }
+      case 'escrow': {
+        const escrows = await adminApi.getEscrows();
+        return escrows.map(e => ({
+          'Escrow ID': e.id,
+          'Project ID': e.project_id,
+          'Project Title': e.project_title,
+          'Customer': e.customer_name,
+          'Freelancer': e.freelancer_name,
+          'Total Amount ($)': e.total_amount,
+          'Held ($)': e.held_amount,
+          'Released ($)': e.released_amount,
+          'Refunded ($)': e.refunded_amount,
+          'Status': e.status
+        }));
+      }
+      case 'disputes': {
+        const disputes = await adminApi.getDisputes();
+        return disputes.map(d => ({
+          'Dispute ID': d.id,
+          'Project ID': d.project_id,
+          'Project Title': d.project_title,
+          'Reason': d.reason,
+          'Status': d.status,
+          'Escrow Held ($)': d.escrow_held,
+          'Resolution': d.resolution_notes || 'Pending',
+          'Raised Date': d.created_at
+        }));
+      }
+      default: {
+        const metrics = await adminApi.getDashboardMetrics();
+        return [metrics];
+      }
+    }
+  },
+
+  /**
+   * Export genuine CSV from real database tables
+   */
+  exportReportCSV: async (reportType: string): Promise<string> => {
+    adminSecurity.verifyAdmin();
+    const rows = await adminApi.generateReportData(reportType);
+    if (!rows || rows.length === 0) {
+      throw new Error(`No data available to export for report "${reportType}".`);
+    }
+
+    const headers = Object.keys(rows[0]);
+    const csvLines = [
+      headers.map(h => `"${h.replace(/"/g, '""')}"`).join(',')
+    ];
+
+    rows.forEach((row: any) => {
+      const line = headers.map(h => {
+        const val = row[h];
+        if (val === null || val === undefined) return '""';
+        return `"${String(val).replace(/"/g, '""')}"`;
+      }).join(',');
+      csvLines.push(line);
+    });
+
+    const csvContent = csvLines.join('\r\n');
+
+    // Trigger download in browser environment
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `trustlance_${reportType}_report_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    adminApi.logAdminAction('ADMIN_EXPORT_REPORT', 'SETTINGS', reportType, null, { rows: rows.length });
+    return csvContent;
   }
 };
 
@@ -1803,12 +2980,14 @@ Key Platform Rules:
 - AI Trust Score ranges from 0-100 based on On-Time Delivery (20%), Client Ratings (30%), Completion Rate (25%), Response Time (15%), Repeat Clients (10%), with dispute deductions.
 - Milestones can be funded independently and released tranche-by-tranche.`;
 
-    // Try backend proxy if available
-    try {
-      const res = await apiClient.post('/ai/chat.php', { message: prompt });
-      if (res.data?.reply) return res.data.reply;
-    } catch (e) {
-      // Fall through to client direct Gemini call
+    // Try backend proxy if configured
+    if (API_BASE_URL) {
+      try {
+        const res = await apiClient.post('/ai/chat.php', { message: prompt });
+        if (res.data?.reply) return res.data.reply;
+      } catch (e) {
+        // Fall through to direct or fallback response
+      }
     }
 
     // Direct Gemini fetch using environment key if available

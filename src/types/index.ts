@@ -57,6 +57,33 @@ export interface ServiceCategory {
   delivery_days: number;
   project_count: number;
   is_active: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CategoryItem {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  is_active: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface AdminAuditLog {
+  id: number;
+  admin_id: number;
+  admin_name: string;
+  action: string;
+  target_type: 'SERVICE' | 'CATEGORY' | 'USER' | 'FREELANCER' | 'CUSTOMER' | 'PROJECT' | 'ESCROW' | 'DISPUTE' | 'FINANCIAL' | 'SETTINGS';
+  target_id: string | number;
+  old_value?: any;
+  new_value?: any;
+  timestamp: string;
+  ip?: string;
+  metadata?: any;
 }
 
 export interface Project {

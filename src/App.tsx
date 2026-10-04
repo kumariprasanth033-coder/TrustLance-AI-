@@ -9,6 +9,8 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { AIChatbot } from './components/AIChatbot';
 
+import { AdminRouteGuard } from './components/AdminRouteGuard';
+
 // Pages
 import { LandingPage } from './pages/LandingPage';
 import { RoleSelectionPage } from './pages/RoleSelectionPage';
@@ -53,7 +55,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-[#0B1020] text-[#F8FAFC] transition-colors duration-200">
+      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B1020] text-slate-900 dark:text-[#F8FAFC] transition-colors duration-200">
         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <main className="flex-1">
@@ -84,11 +86,32 @@ export default function App() {
 
             {/* Administrative Operations */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-            <Route path="/admin/ai-broker" element={<AIBrokerDashboardPage />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <AdminRouteGuard>
+                  <AdminDashboardPage />
+                </AdminRouteGuard>
+              }
+            />
+            <Route
+              path="/admin/ai-broker"
+              element={
+                <AdminRouteGuard>
+                  <AIBrokerDashboardPage />
+                </AdminRouteGuard>
+              }
+            />
 
             {/* AI Broker Autonomous Oversight & Automated Testing */}
-            <Route path="/ai-broker" element={<AIBrokerDashboardPage />} />
+            <Route
+              path="/ai-broker"
+              element={
+                <AdminRouteGuard>
+                  <AIBrokerDashboardPage />
+                </AdminRouteGuard>
+              }
+            />
 
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />

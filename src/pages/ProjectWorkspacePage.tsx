@@ -553,11 +553,11 @@ export const ProjectWorkspacePage: React.FC = () => {
           <div className="space-y-4">
             {/* AI Broker Decision Engine & Completion Prediction (Requirement 9 & 10) */}
             {brokerAnalysis && (
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-900/20 via-indigo-950/30 to-purple-950/20 border border-blue-500/30 text-xs space-y-4 shadow-md">
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-900/20 via-indigo-950/30 to-purple-950/20 border border-blue-500/30 text-xs space-y-4 shadow-md bold-dark-text">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Brain className="w-4 h-4 text-blue-400" />
-                    <h4 className="font-extrabold text-slate-900 dark:text-white">AI Broker Engine</h4>
+                    <h4 className="font-extrabold text-slate-900 dark:text-white bold-dark-text">AI Broker Engine</h4>
                   </div>
                   <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
                     LIVE METRICS
@@ -637,8 +637,8 @@ export const ProjectWorkspacePage: React.FC = () => {
               </div>
             )}
 
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3 shadow-sm">
-              <h4 className="font-bold text-slate-900 dark:text-white">Escrow Protection State</h4>
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3 shadow-sm bold-dark-text">
+              <h4 className="font-bold text-slate-900 dark:text-white bold-dark-text">Escrow Protection State</h4>
               <div className="space-y-2 tabular-nums font-mono text-[11px]">
                 <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
                   <span className="text-slate-600 dark:text-slate-400 font-sans">Total Scope Value:</span>
@@ -908,11 +908,11 @@ export const ProjectWorkspacePage: React.FC = () => {
 
           {/* Transaction Ledger Table */}
           <div className="pt-2">
-            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 bold-dark-text">
               Immutable Escrow Ledger
             </h4>
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10">
-              <table className="w-full text-left font-mono text-[11px]">
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10 bold-dark-text">
+              <table className="w-full text-left font-mono text-[11px] bold-dark-text">
                 <thead className="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-semibold">
                   <tr>
                     <th className="py-3 px-4">Transaction ID</th>
@@ -969,8 +969,8 @@ export const ProjectWorkspacePage: React.FC = () => {
               </span>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10">
-              <table className="w-full text-left font-mono text-[11px]">
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10 bold-dark-text">
+              <table className="w-full text-left font-mono text-[11px] bold-dark-text">
                 <thead className="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-semibold">
                   <tr>
                     <th className="py-2.5 px-4">Event</th>

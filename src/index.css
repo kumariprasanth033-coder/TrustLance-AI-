@@ -48,7 +48,118 @@
   .light body,
   html.light body {
     background-color: #f8fafc !important;
+    color: #0f172a !important;
+  }
+
+  /* High contrast bold dark text enforcement for light theme */
+  .light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
+  html.light h1, html.light h2, html.light h3, html.light h4, html.light h5, html.light h6 {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+  }
+
+  .light .text-slate-400,
+  html.light .text-slate-400 {
+    color: #475569 !important;
+    font-weight: 500 !important;
+  }
+
+  .light .text-slate-500,
+  html.light .text-slate-500 {
+    color: #334155 !important;
+    font-weight: 600 !important;
+  }
+
+  .light .text-slate-600,
+  html.light .text-slate-600 {
     color: #1e293b !important;
+    font-weight: 600 !important;
+  }
+
+  .light .card-theme {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  /* =========================================================================
+     Utility class: bold-dark-text
+     Enforces dark color (#0f172a) and 700 font weight to ensure high visibility
+     in light mode across all data tables and analytical cards.
+     ========================================================================= */
+  .bold-dark-text {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+  }
+
+  /* Ensure child headers, cells, labels, metrics, and captions inherit 700 weight */
+  .bold-dark-text th,
+  .bold-dark-text td,
+  .bold-dark-text h1,
+  .bold-dark-text h2,
+  .bold-dark-text h3,
+  .bold-dark-text h4,
+  .bold-dark-text h5,
+  .bold-dark-text h6,
+  .bold-dark-text strong,
+  .bold-dark-text b,
+  .bold-dark-text .card-title,
+  .bold-dark-text .stat-value {
+    font-weight: 700 !important;
+  }
+
+  /* Light mode enforcement: strictly dark (#0f172a) with high contrast for tables & analytical cards */
+  html.light .bold-dark-text,
+  .light .bold-dark-text,
+  body:not(.dark) .bold-dark-text,
+  html:not(.dark) .bold-dark-text {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+  }
+
+  html.light .bold-dark-text th,
+  .light .bold-dark-text th,
+  body:not(.dark) .bold-dark-text th,
+  html.light .bold-dark-text td,
+  .light .bold-dark-text td,
+  body:not(.dark) .bold-dark-text td {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+  }
+
+  /* Upgrade light-theme muted text inside bold-dark-text containers to crisp legible dark slate (#1e293b) */
+  html.light .bold-dark-text .text-slate-400,
+  html.light .bold-dark-text .text-slate-500,
+  html.light .bold-dark-text .text-slate-600,
+  html.light .bold-dark-text .text-gray-400,
+  html.light .bold-dark-text .text-gray-500,
+  .light .bold-dark-text .text-slate-400,
+  .light .bold-dark-text .text-slate-500,
+  .light .bold-dark-text .text-slate-600,
+  body:not(.dark) .bold-dark-text .text-slate-400,
+  body:not(.dark) .bold-dark-text .text-slate-500,
+  body:not(.dark) .bold-dark-text .text-slate-600 {
+    color: #1e293b !important;
+    font-weight: 600 !important;
+  }
+
+  /* Dark mode: preserve crisp readable light text while maintaining 700 font weight */
+  html.dark .bold-dark-text,
+  .dark .bold-dark-text {
+    color: #f8fafc !important;
+    font-weight: 700 !important;
+  }
+
+  html.dark .bold-dark-text th,
+  .dark .bold-dark-text th {
+    color: #e2e8f0 !important;
+    font-weight: 700 !important;
+  }
+
+  html.dark .bold-dark-text td,
+  .dark .bold-dark-text td {
+    color: #f8fafc !important;
   }
 
   p {

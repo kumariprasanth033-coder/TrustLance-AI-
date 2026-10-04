@@ -231,7 +231,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
           
           {/* Key Metrics Grid (All from Database) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <Card hoverLift className="p-4 sm:p-5">
+            <Card hoverLift className="p-4 sm:p-5 bold-dark-text">
               <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Total Escrow Held
               </span>
@@ -243,7 +243,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               <span className="text-[10px] text-slate-400 mt-1 block">Live vault balance</span>
             </Card>
 
-            <Card hoverLift className="p-4 sm:p-5">
+            <Card hoverLift className="p-4 sm:p-5 bold-dark-text">
               <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Active Projects
               </span>
@@ -256,7 +256,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               <span className="text-[10px] text-slate-400 mt-1 block">Monitored 24/7</span>
             </Card>
 
-            <Card hoverLift className="p-4 sm:p-5">
+            <Card hoverLift className="p-4 sm:p-5 bold-dark-text">
               <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Projects At Risk
               </span>
@@ -271,7 +271,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               <span className="text-[10px] text-slate-400 mt-1 block">High or Critical risk</span>
             </Card>
 
-            <Card hoverLift className="p-4 sm:p-5">
+            <Card hoverLift className="p-4 sm:p-5 bold-dark-text">
               <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Upcoming Deadlines
               </span>
@@ -284,7 +284,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               <span className="text-[10px] text-slate-400 mt-1 block">Velocity watch active</span>
             </Card>
 
-            <Card hoverLift className="p-4 sm:p-5">
+            <Card hoverLift className="p-4 sm:p-5 bold-dark-text">
               <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Deadline Missed
               </span>
@@ -302,7 +302,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
 
           {/* Secondary Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between bold-dark-text">
               <div>
                 <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">Pending Reviews</span>
                 <strong className="text-lg font-bold text-slate-900 dark:text-white">{metrics?.pending_reviews || 0}</strong>
@@ -312,7 +312,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between bold-dark-text">
               <div>
                 <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">Refund Records</span>
                 <strong className="text-lg font-bold text-slate-900 dark:text-white">
@@ -324,7 +324,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between bold-dark-text">
               <div>
                 <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">Released Payments</span>
                 <strong className="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">
@@ -336,7 +336,7 @@ export const AIBrokerDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 flex items-center justify-between bold-dark-text">
               <div>
                 <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">Active Disputes</span>
                 <strong className="text-lg font-bold text-rose-500">{metrics?.active_disputes || 0}</strong>
@@ -351,9 +351,9 @@ export const AIBrokerDashboardPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             {/* Risk Distribution Card */}
-            <Card className="p-6 space-y-4">
+            <Card className="p-6 space-y-4 bold-dark-text">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 bold-dark-text">
                   <ShieldAlert className="w-4 h-4 text-blue-500" />
                   <span>Algorithmic Risk Distribution</span>
                 </h3>
@@ -824,9 +824,9 @@ export const AIBrokerDashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#151B2E] overflow-hidden shadow-sm">
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#151B2E] overflow-hidden shadow-sm bold-dark-text">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs bold-dark-text">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/75 dark:bg-white/5 font-mono text-[10px] text-slate-400 uppercase tracking-wider">
                     <th className="py-3 px-4">Timestamp</th>

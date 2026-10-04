@@ -45,12 +45,12 @@ export const FreelancerDashboardPage: React.FC = () => {
       </div>
 
       {/* Trust Score & Metrics Banner */}
-      <Card className="flex flex-col md:flex-row items-center justify-between gap-8">
+      <Card className="flex flex-col md:flex-row items-center justify-between gap-8 bold-dark-text">
         <div className="flex items-center gap-6">
           <TrustScoreRing score={freelancer?.trust_score || 99.2} size={90} strokeWidth={7} />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Elite Tier Freelancer</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white bold-dark-text">Elite Tier Freelancer</h3>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 TOP 2%
               </span>
@@ -61,16 +61,16 @@ export const FreelancerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-mono tabular-nums w-full md:w-auto">
-          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-mono tabular-nums w-full md:w-auto bold-dark-text">
+          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center bold-dark-text">
             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block uppercase font-semibold">Wallet Balance</span>
             <strong className="text-base text-emerald-600 dark:text-emerald-400 font-bold">$800.00</strong>
           </div>
-          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center">
+          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center bold-dark-text">
             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block uppercase font-semibold">Pending Escrow</span>
             <strong className="text-base text-blue-600 dark:text-blue-400 font-bold">$1,600.00</strong>
           </div>
-          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center col-span-2 sm:col-span-1">
+          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 text-center col-span-2 sm:col-span-1 bold-dark-text">
             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block uppercase font-semibold">Completed</span>
             <strong className="text-base text-slate-900 dark:text-white font-bold">52 Projects</strong>
           </div>
@@ -78,7 +78,7 @@ export const FreelancerDashboardPage: React.FC = () => {
       </Card>
 
       {/* Active Contracts & Deliverables */}
-      <Card className="space-y-4">
+      <Card className="space-y-4 bold-dark-text">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
           <div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">Active Milestone Contracts</h3>

@@ -143,7 +143,7 @@ export const LandingPage: React.FC = () => {
 
       {/* 3. PLATFORM TELEMETRY & TRUST METRICS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 shadow-lg bold-dark-text">
           <div className="p-3 border-r-0 md:border-r border-slate-100 dark:border-white/5">
             <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums">$2.4M+</span>
             <span className="block text-xs font-medium text-slate-600 dark:text-slate-400 mt-1">Escrow Funds Protected</span>

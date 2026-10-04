@@ -44,7 +44,7 @@ export const CustomerDashboardPage: React.FC = () => {
 
       {/* Statistics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card hoverLift>
+        <Card hoverLift className="bold-dark-text">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Active Projects</span>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
@@ -54,7 +54,7 @@ export const CustomerDashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card hoverLift>
+        <Card hoverLift className="bold-dark-text">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Escrow Held</span>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 tabular-nums font-mono">
@@ -64,7 +64,7 @@ export const CustomerDashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card hoverLift>
+        <Card hoverLift className="bold-dark-text">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Completed Work</span>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums font-mono">
@@ -74,7 +74,7 @@ export const CustomerDashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card hoverLift>
+        <Card hoverLift className="bold-dark-text">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider font-mono">Client Trust Score</span>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">
@@ -86,7 +86,7 @@ export const CustomerDashboardPage: React.FC = () => {
       </div>
 
       {/* Active Projects List */}
-      <Card className="space-y-4">
+      <Card className="space-y-4 bold-dark-text">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
           <div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">Active Projects & Workspaces</h3>
