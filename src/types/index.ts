@@ -56,6 +56,7 @@ export interface ServiceCategory {
   avg_budget: number;
   delivery_days: number;
   project_count: number;
+  freelancer_count?: number;
   is_active: number;
   created_at?: string;
   updated_at?: string;
