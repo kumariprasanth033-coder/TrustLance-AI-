@@ -68,6 +68,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       title: 'FINANCIAL & ESCROW',
       items: [
         { id: 'escrow', label: 'Escrow Vault', icon: Lock },
+        { id: 'payments', label: 'Payments', icon: DollarSign },
+        { id: 'refunds', label: 'Refunds', icon: CreditCard },
         { id: 'disputes', label: 'Disputes', icon: Scale, badge: badgeCounts.disputes },
         { id: 'risk-alerts', label: 'Risk Alerts', icon: ShieldAlert, badge: badgeCounts.riskAlerts }
       ]
@@ -75,8 +77,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     {
       title: 'GOVERNANCE & AUDIT',
       items: [
-        { id: 'activity-center', label: 'Platform Activity', icon: Activity },
-        { id: 'audit-logs', label: 'Admin Audit Log', icon: ShieldCheck },
+        { id: 'reviews', label: 'Reviews', icon: Sparkles },
+        { id: 'notifications', label: 'Notifications', icon: Activity },
+        { id: 'audit-logs', label: 'Audit Logs', icon: ShieldCheck },
         { id: 'reports', label: 'Reports & CSV', icon: FileSpreadsheet },
         { id: 'settings', label: 'Settings', icon: Settings }
       ]
@@ -84,17 +87,17 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   ];
 
   return (
-    <Card as="aside" className="p-4 shadow-xl flex flex-col justify-between h-full bg-white dark:bg-[#151B2E]">
+    <Card as="aside" className="p-4 shadow-xl flex flex-col justify-between h-full bg-white dark:bg-[#151B2E] bold-dark-text">
       <div className="space-y-6">
-        <div className="px-2 pt-1 pb-2 border-b border-slate-100 dark:border-white/5 flex items-center gap-2.5">
+        <div className="px-2 pt-1 pb-2 border-b border-slate-200 dark:border-white/5 flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-xs shadow-md shadow-blue-500/20">
             TL
           </div>
           <div>
-            <h2 className="font-extrabold text-xs text-slate-900 dark:text-white tracking-tight leading-none">
+            <h2 className="font-extrabold text-xs text-slate-900 dark:text-white tracking-tight leading-none bold-dark-text">
               TrustLance AI
             </h2>
-            <span className="text-[10px] font-mono text-rose-500 font-semibold uppercase tracking-wider">
+            <span className="text-[10px] font-mono text-rose-600 dark:text-rose-400 font-bold uppercase tracking-wider">
               Control Center
             </span>
           </div>
@@ -103,7 +106,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         <nav className="space-y-4">
           {navSections.map((section) => (
             <div key={section.title} className="space-y-1">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2 block">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-2 block bold-dark-text">
                 {section.title}
               </span>
               <div className="space-y-0.5">
@@ -114,10 +117,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                     <button
                       key={item.id}
                       onClick={() => onSelectTab(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all font-semibold ${
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all font-bold ${
                         isActive
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-extrabold'
+                          : 'text-slate-900 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 bold-dark-text'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">

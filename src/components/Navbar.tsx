@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-              <span>AI Broker & Tests</span>
+              <span>AI Broker</span>
             </Link>
             <Link
               to="/faq"
@@ -344,13 +344,13 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
                 </Link>
                 <Link
                   to="/login"
-                  className="btn-secondary-surface px-3.5 py-1.5 text-xs font-semibold"
+                  className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
                 >
-                  Sign In
+                  Login
                 </Link>
                 <Link
                   to="/onboarding"
-                  className="btn-primary-gradient px-4 py-1.5 text-xs font-semibold"
+                  className="btn-primary-gradient px-4 py-2 text-xs font-semibold"
                 >
                   Get Started
                 </Link>

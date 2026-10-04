@@ -33,12 +33,8 @@ import { FAQPage } from './pages/FAQPage';
 export default function App() {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('trustlance_theme');
-    // If user has not explicitly chosen light in this new theme rollout, default to dark
-    if (saved === 'light') {
-      // User can still toggle, but let's default to dark
-      return false;
-    }
-    return true; // Default to dark-first theme per design guidelines
+    // Default to clean light mode per TrustLance AI design system
+    return saved === 'dark';
   });
 
   useEffect(() => {
@@ -55,7 +51,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B1020] text-slate-900 dark:text-[#F8FAFC] transition-colors duration-200">
+      <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#0B1020] text-[#0F172A] dark:text-[#F8FAFC] transition-colors duration-200">
         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <main className="flex-1">

@@ -67,7 +67,7 @@ export const ServicesPage: React.FC = () => {
             Explore Freelance Services
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-xl font-medium">
-            “Find trusted professionals across the skills you need.”
+            Find trusted professionals for every type of project.
           </p>
         </div>
 
@@ -138,22 +138,17 @@ export const ServicesPage: React.FC = () => {
 
             <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5 space-y-3">
               <div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400 tabular-nums font-mono font-medium">
-                <span>Avg. Budget: <strong className="text-slate-900 dark:text-white font-bold">${service.avg_budget}</strong></span>
-                <span>~{service.delivery_days} days</span>
+                <span>Freelancers: <strong className="text-slate-900 dark:text-white font-bold">{service.freelancer_count || 12} available</strong></span>
+                <span>Active: <strong className="text-blue-600 dark:text-blue-400 font-bold">{service.project_count} projects</strong></span>
               </div>
 
               <div className="flex items-center gap-2 pt-1">
                 <Link
                   to={`/services/${service.id}`}
-                  className="btn-secondary-surface flex-1 py-2 text-xs font-bold"
+                  className="btn-primary-gradient w-full py-2.5 text-xs font-bold gap-1.5 flex items-center justify-center"
                 >
-                  Details
-                </Link>
-                <Link
-                  to={`/customer/projects/create?service_id=${service.id}`}
-                  className="btn-primary-gradient flex-1 py-2 text-xs font-bold"
-                >
-                  Post Job
+                  <span>View Service</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>

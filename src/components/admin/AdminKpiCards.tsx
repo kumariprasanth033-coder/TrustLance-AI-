@@ -24,8 +24,8 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
   const cards = [
     {
       title: 'Total Users',
-      value: metrics?.total_users ?? 7,
-      sub: `${metrics?.customers ?? 1} Customers • ${metrics?.freelancers ?? 5} Freelancers`,
+      value: metrics?.total_users ?? 0,
+      sub: `${metrics?.customers ?? 0} Customers • ${metrics?.freelancers ?? 0} Freelancers`,
       icon: Users,
       color: 'text-blue-600 dark:text-blue-400',
       bg: 'bg-blue-50 dark:bg-blue-950/40',
@@ -33,7 +33,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Verified Freelancers',
-      value: metrics?.verified_freelancers ?? 5,
+      value: metrics?.verified_freelancers ?? 0,
       sub: 'AI Trust Score ≥ 80.0',
       icon: UserCheck,
       color: 'text-indigo-600 dark:text-indigo-400',
@@ -42,8 +42,8 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Active Projects',
-      value: metrics?.active_projects ?? 3,
-      sub: `${metrics?.total_projects ?? 4} total registered in MySQL`,
+      value: metrics?.active_projects ?? 0,
+      sub: `${metrics?.total_projects ?? 0} total registered in MySQL`,
       icon: Briefcase,
       color: 'text-cyan-600 dark:text-cyan-400',
       bg: 'bg-cyan-50 dark:bg-cyan-950/40',
@@ -51,7 +51,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Completed Projects',
-      value: metrics?.completed_projects ?? 1,
+      value: metrics?.completed_projects ?? 0,
       sub: '100% Milestone Handover',
       icon: CheckCircle2,
       color: 'text-emerald-600 dark:text-emerald-400',
@@ -60,7 +60,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Active Escrow Accounts',
-      value: metrics?.active_escrow ?? 1,
+      value: metrics?.active_escrow ?? 0,
       sub: 'Multi-sig Vault Protected',
       icon: Lock,
       color: 'text-amber-600 dark:text-amber-400',
@@ -69,7 +69,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Escrow Held in Vault',
-      value: `$${(Number(metrics?.escrow_held) || 1600).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      value: `$${(Number(metrics?.escrow_held) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
       sub: 'Locked awaiting deliverable sign-off',
       icon: DollarSign,
       color: 'text-emerald-600 dark:text-emerald-400',
@@ -78,7 +78,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Released Payments',
-      value: `$${(Number(metrics?.released_payments) || 800).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      value: `$${(Number(metrics?.released_payments) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
       sub: 'Transferred directly to freelancer wallets',
       icon: DollarSign,
       color: 'text-blue-600 dark:text-blue-400',
@@ -105,7 +105,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Pending Approvals',
-      value: metrics?.pending_approvals ?? 1,
+      value: metrics?.pending_approvals ?? 0,
       sub: 'Deliverables awaiting client review',
       icon: Clock,
       color: 'text-amber-600 dark:text-amber-400',
@@ -114,7 +114,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'AI Risk Alerts',
-      value: metrics?.ai_risk_alerts ?? 1,
+      value: metrics?.ai_risk_alerts ?? 0,
       sub: 'Real-time velocity & deadline scan',
       icon: ShieldAlert,
       color: 'text-rose-600 dark:text-rose-400',
@@ -123,7 +123,7 @@ export const AdminKpiCards: React.FC<AdminKpiCardsProps> = ({ metrics, onNavigat
     },
     {
       title: 'Active Services Catalog',
-      value: metrics?.total_services ?? 20,
+      value: metrics?.total_services ?? 0,
       sub: 'Full CRUD dynamic marketplace',
       icon: Layers,
       color: 'text-blue-600 dark:text-blue-400',

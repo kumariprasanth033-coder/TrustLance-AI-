@@ -265,13 +265,17 @@ export const AdminDashboardPage: React.FC = () => {
             <AdminProjectMonitoring onDataChanged={loadAllMetrics} />
           )}
 
-          {/* TAB: ESCROW & DISPUTES */}
-          {activeTab === 'escrow' && (
+          {/* TAB: ESCROW, PAYMENTS, REFUNDS & DISPUTES */}
+          {(activeTab === 'escrow' || activeTab === 'payments' || activeTab === 'refunds') && (
             <AdminEscrowAndDisputes initialTab="escrow" onDataChanged={loadAllMetrics} />
           )}
 
           {activeTab === 'disputes' && (
             <AdminEscrowAndDisputes initialTab="disputes" onDataChanged={loadAllMetrics} />
+          )}
+
+          {activeTab === 'reviews' && (
+            <AdminUserManagement viewMode="freelancers" onDataChanged={loadAllMetrics} />
           )}
 
           {activeTab === 'risk-alerts' && (
@@ -281,14 +285,14 @@ export const AdminDashboardPage: React.FC = () => {
           {/* TAB: AI BROKER CENTER */}
           {activeTab === 'ai-broker' && (
             <div className="space-y-6">
-              <Card className="p-6 bg-[#151B2E] border-blue-500/30">
+              <Card className="p-6 bg-white dark:bg-[#151B2E] border border-blue-500/30 shadow-sm bold-dark-text">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-mono font-bold uppercase text-blue-400">
+                    <span className="text-[10px] font-mono font-bold uppercase text-blue-600 dark:text-blue-400">
                       Autonomous Intelligence Broker
                     </span>
-                    <h2 className="text-xl font-extrabold text-white">AI Broker Center & Test Suite</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-xl font-extrabold text-slate-900 dark:text-white bold-dark-text">AI Broker Center & Test Suite</h2>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       Continuous invariant validation, simulated deadline failures, and automated escrow safeguards.
                     </p>
                   </div>
@@ -305,8 +309,8 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
           )}
 
-          {/* TAB: ACTIVITY CENTER & AUDIT LOGS */}
-          {activeTab === 'activity-center' && (
+          {/* TAB: ACTIVITY CENTER & AUDIT LOGS & NOTIFICATIONS */}
+          {(activeTab === 'activity-center' || activeTab === 'notifications') && (
             <AdminActivityAndReports initialView="activity" />
           )}
 
@@ -321,29 +325,29 @@ export const AdminDashboardPage: React.FC = () => {
 
           {/* TAB: SETTINGS */}
           {activeTab === 'settings' && (
-            <Card className="p-6 bg-[#151B2E] space-y-6">
-              <h2 className="text-lg font-extrabold text-white">Platform System Settings & Engine Health</h2>
+            <Card className="p-6 bg-white dark:bg-[#151B2E] border border-slate-200 dark:border-white/10 space-y-6 shadow-sm bold-dark-text">
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white bold-dark-text">Platform System Settings & Engine Health</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold">
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <span className="text-slate-400 font-mono text-[10px]">DATABASE ENGINE</span>
-                  <p className="text-white font-bold">MySQL 8.0 Compatible Relational Store</p>
-                  <p className="text-emerald-400 font-mono text-[11px]">ACID Transactions: Enabled</p>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1 bold-dark-text">
+                  <span className="text-slate-500 dark:text-slate-400 font-mono text-[10px]">DATABASE ENGINE</span>
+                  <p className="text-slate-900 dark:text-white font-bold bold-dark-text">MySQL 8.0 Compatible Relational Store</p>
+                  <p className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px] font-bold">ACID Transactions: Enabled</p>
                 </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <span className="text-slate-400 font-mono text-[10px]">ESCROW PROTOCOL</span>
-                  <p className="text-white font-bold">TrustLance Multi-Signature AI Vault</p>
-                  <p className="text-emerald-400 font-mono text-[11px]">Auto-release: Locked on dispute</p>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1 bold-dark-text">
+                  <span className="text-slate-500 dark:text-slate-400 font-mono text-[10px]">ESCROW PROTOCOL</span>
+                  <p className="text-slate-900 dark:text-white font-bold bold-dark-text">TrustLance Multi-Signature AI Vault</p>
+                  <p className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px] font-bold">Auto-release: Locked on dispute</p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-white/10">
-                <h3 className="font-extrabold text-sm text-rose-400 mb-2">Emergency Recovery & Seed Reset</h3>
-                <p className="text-xs text-slate-400 mb-3">
+              <div className="pt-4 border-t border-slate-200 dark:border-white/10">
+                <h3 className="font-extrabold text-sm text-rose-600 dark:text-rose-400 mb-2">Emergency Recovery & Seed Reset</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mb-3 font-medium">
                   Resetting the database clears test mutations and restores all initial users, 20 services, and baseline escrow tranches.
                 </p>
                 <button
                   onClick={handleResetDb}
-                  className="btn-secondary-surface text-rose-400 hover:bg-rose-950/40 px-4 py-2 text-xs font-bold gap-2"
+                  className="btn-secondary-surface text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 px-4 py-2 text-xs font-bold gap-2"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Execute Platform Seed Reset</span>

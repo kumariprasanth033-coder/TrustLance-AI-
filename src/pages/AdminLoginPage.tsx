@@ -54,24 +54,24 @@ export const AdminLoginPage: React.FC = () => {
         </div>
 
         {/* Card */}
-        <Card className="p-6 sm:p-8 shadow-2xl">
+        <Card className="p-6 sm:p-8 shadow-2xl bold-dark-text">
           
-          <div className="mb-6 p-3.5 rounded-2xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
-            <span className="text-slate-700 dark:text-slate-300 font-medium">
-              Demo Admin: <strong className="text-blue-600 dark:text-blue-400">admin@demo.com</strong>
+          <div className="mb-6 p-3.5 rounded-2xl bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/30 flex items-center justify-between text-xs bold-dark-text">
+            <span className="text-slate-900 dark:text-slate-200 font-bold">
+              Demo Admin: <strong className="text-blue-600 dark:text-blue-400 font-extrabold">admin@demo.com</strong>
             </span>
             <button
               type="button"
               onClick={handleFillDemo}
-              className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
             >
-              <Sparkles className="w-3 h-3 text-purple-500" />
+              <Sparkles className="w-3.5 h-3.5 text-purple-500" />
               Fill Admin
             </button>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2 font-bold">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -79,7 +79,7 @@ export const AdminLoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-extrabold text-slate-900 dark:text-slate-200 mb-1.5 bold-dark-text">
                 Admin Work Email
               </label>
               <div className="relative">
@@ -89,13 +89,13 @@ export const AdminLoginPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:outline-none transition-all font-mono"
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:outline-none transition-all font-mono font-bold bold-dark-text"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-extrabold text-slate-900 dark:text-slate-200 mb-1.5 bold-dark-text">
                 Security Password
               </label>
               <div className="relative">
@@ -105,7 +105,7 @@ export const AdminLoginPage: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:outline-none transition-all font-mono"
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-white/10 text-xs focus:bg-white dark:focus:bg-[#0B1020] focus:border-blue-500 focus:outline-none transition-all font-mono font-bold bold-dark-text"
                 />
               </div>
             </div>

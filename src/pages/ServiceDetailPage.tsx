@@ -120,6 +120,20 @@ export const ServiceDetailPage: React.FC = () => {
                   {f.bio}
                 </p>
 
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-semibold">
+                  <span className="flex items-center gap-1 text-amber-500 font-bold">
+                    <Star className="w-3.5 h-3.5 fill-amber-400" />
+                    <span>4.98</span>
+                  </span>
+                  <span>·</span>
+                  <span className="tabular-nums font-mono">52 completed projects</span>
+                  <span>·</span>
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Available Now
+                  </span>
+                </div>
+
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {f.skills?.slice(0, 3).map((sk: any, i: number) => (
                     <span key={i} className="text-[11px] px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-mono border border-slate-200/50 dark:border-white/5">
