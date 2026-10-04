@@ -24,6 +24,7 @@ import { ProjectCreationWizard } from './pages/ProjectCreationWizard';
 import { ProjectWorkspacePage } from './pages/ProjectWorkspacePage';
 import { FreelancerDashboardPage } from './pages/FreelancerDashboardPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { AIBrokerDashboardPage } from './pages/AIBrokerDashboardPage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
 import { FAQPage } from './pages/FAQPage';
 
@@ -84,6 +85,10 @@ export default function App() {
             {/* Administrative Operations */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/ai-broker" element={<AIBrokerDashboardPage />} />
+
+            {/* AI Broker Autonomous Oversight & Automated Testing */}
+            <Route path="/ai-broker" element={<AIBrokerDashboardPage />} />
 
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />

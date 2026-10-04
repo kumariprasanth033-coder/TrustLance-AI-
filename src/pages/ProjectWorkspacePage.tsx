@@ -549,8 +549,94 @@ export const ProjectWorkspacePage: React.FC = () => {
             )}
           </div>
 
-          {/* Right sidebar: Contract Details */}
+          {/* Right sidebar: Contract Details & AI Broker Prediction */}
           <div className="space-y-4">
+            {/* AI Broker Decision Engine & Completion Prediction (Requirement 9 & 10) */}
+            {brokerAnalysis && (
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-900/20 via-indigo-950/30 to-purple-950/20 border border-blue-500/30 text-xs space-y-4 shadow-md">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-blue-400" />
+                    <h4 className="font-extrabold text-slate-900 dark:text-white">AI Broker Engine</h4>
+                  </div>
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
+                    LIVE METRICS
+                  </span>
+                </div>
+
+                {/* Completion Probability & Risk Gauge */}
+                <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2.5">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-slate-400 text-[11px] font-medium">Completion Probability:</span>
+                    <strong className="text-base font-extrabold text-blue-400 font-mono">
+                      {brokerAnalysis.completion_probability}%
+                    </strong>
+                  </div>
+                  <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
+                      style={{ width: `${brokerAnalysis.completion_probability}%` }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                    <div className="p-2 rounded-lg bg-slate-900/60 border border-white/5">
+                      <span className="text-slate-400 block text-[10px] uppercase font-bold">Risk Level</span>
+                      <span className={`font-extrabold text-xs uppercase ${
+                        brokerAnalysis.risk_level === 'LOW' ? 'text-emerald-400' :
+                        brokerAnalysis.risk_level === 'MEDIUM' ? 'text-amber-400' :
+                        brokerAnalysis.risk_level === 'HIGH' ? 'text-orange-400' : 'text-rose-400'
+                      }`}>
+                        {brokerAnalysis.risk_level}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-slate-900/60 border border-white/5">
+                      <span className="text-slate-400 block text-[10px] uppercase font-bold">Deadline Risk</span>
+                      <span className={`font-extrabold text-xs uppercase ${
+                        brokerAnalysis.deadline_risk === 'ON_TRACK' ? 'text-emerald-400' :
+                        brokerAnalysis.deadline_risk === 'APPROACHING' ? 'text-amber-400' : 'text-rose-400'
+                      }`}>
+                        {brokerAnalysis.deadline_risk.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Milestone Progress */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-400">Milestone Progress:</span>
+                    <strong className="text-white font-mono">{brokerAnalysis.milestone_progress}%</strong>
+                  </div>
+                  <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                      style={{ width: `${brokerAnalysis.milestone_progress}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Telemetry Analysis Explanations */}
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">
+                    Telemetry Analysis
+                  </span>
+                  <ul className="space-y-1.5 text-[11px] text-slate-300">
+                    {brokerAnalysis.explanations.map((exp, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="text-blue-400 font-bold leading-none mt-1">›</span>
+                        <span className="leading-snug">{exp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="text-[10px] text-slate-500 italic pt-1 border-t border-white/5">
+                  * AI-assisted estimate derived from verifiable database records.
+                </div>
+              </div>
+            )}
+
             <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-3 shadow-sm">
               <h4 className="font-bold text-slate-900 dark:text-white">Escrow Protection State</h4>
               <div className="space-y-2 tabular-nums font-mono text-[11px]">
@@ -667,18 +753,53 @@ export const ProjectWorkspacePage: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 pl-6 sm:pl-0">
-                    {/* Customer revision request */}
-                    {isCustomer && deliv.status === 'submitted' && (
+                  <div className="flex flex-wrap items-center gap-2 pl-6 sm:pl-0">
+                    {/* Customer Actions on Submitted Deliverable */}
+                    {isCustomer && (deliv.status === 'submitted' || deliv.status === 'under_review') && (
+                      <>
+                        <button
+                          onClick={() => {
+                            setSelectedDeliverableForApproval(deliv);
+                            setShowApproveModal(true);
+                          }}
+                          className="btn-primary-gradient px-3.5 py-1.5 text-xs font-bold gap-1.5 flex items-center shadow-xs"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Approve & Release Payment</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setSelectedDeliverableId(deliv.id);
+                            setShowRevisionModal(true);
+                          }}
+                          className="btn-secondary-surface px-3 py-1.5 text-xs font-semibold gap-1.5 flex items-center"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>Request Revision</span>
+                        </button>
+                      </>
+                    )}
+
+                    {/* Freelancer Resubmission */}
+                    {isFreelancer && deliv.status === 'revision_requested' && (
                       <button
                         onClick={() => {
-                          setSelectedDeliverableId(deliv.id);
-                          setShowRevisionModal(true);
+                          const rev = projectRevisions.find(r => r.deliverable_id === deliv.id && r.status === 'REQUESTED');
+                          setSelectedRevisionId(rev?.id || 1);
+                          setShowResubmitModal(true);
                         }}
-                        className="btn-secondary-surface px-3 py-1.5 text-xs font-semibold"
+                        className="btn-primary-gradient px-3.5 py-1.5 text-xs font-bold gap-1.5 flex items-center shadow-xs"
                       >
-                        Request Revision
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Submit Revision v{deliv.version + 1}</span>
                       </button>
+                    )}
+
+                    {deliv.status === 'approved' && (
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold text-xs flex items-center gap-1 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Approved & Released
+                      </span>
                     )}
                   </div>
                 </div>
@@ -835,6 +956,111 @@ export const ProjectWorkspacePage: React.FC = () => {
               </table>
             </div>
           </div>
+
+          {/* ActivityLogs: Verifiable Audit Trail (Requirement 13) */}
+          <div className="pt-4 border-t border-slate-100 dark:border-white/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <Activity className="w-3.5 h-3.5 text-blue-500" />
+                <span>AI Broker Activity & Audit Trail</span>
+              </h4>
+              <span className="text-[10px] font-mono text-slate-400">
+                {activityLogs.length} audit event(s) recorded
+              </span>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10">
+              <table className="w-full text-left font-mono text-[11px]">
+                <thead className="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-semibold">
+                  <tr>
+                    <th className="py-2.5 px-4">Event</th>
+                    <th className="py-2.5 px-4">Actor</th>
+                    <th className="py-2.5 px-4">State Transition</th>
+                    <th className="py-2.5 px-4">Reason / Notes</th>
+                    <th className="py-2.5 px-4">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-white/5 font-sans text-xs">
+                  {activityLogs.length > 0 ? (
+                    activityLogs.map((log: any) => (
+                      <tr key={log.id} className="hover:bg-slate-50/50 dark:hover:bg-white/5">
+                        <td className="py-2.5 px-4 font-mono font-bold text-blue-600 dark:text-blue-400 text-[11px]">
+                          {log.action}
+                        </td>
+                        <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">
+                          {log.user_name} <span className="text-[10px] text-slate-400 uppercase font-mono">({log.role})</span>
+                        </td>
+                        <td className="py-2.5 px-4 font-mono text-[10px]">
+                          <span className="text-slate-400">{log.old_state}</span>
+                          <span className="text-slate-400 mx-1">→</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{log.new_state}</span>
+                        </td>
+                        <td className="py-2.5 px-4 text-slate-600 dark:text-slate-400 text-[11px]">
+                          {log.reason}
+                        </td>
+                        <td className="py-2.5 px-4 text-slate-500 font-mono text-[10px] whitespace-nowrap">
+                          {new Date(log.timestamp).toLocaleString()}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-4 px-4 text-center text-slate-400 font-mono text-xs">
+                        Zero audit discrepancies found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Revisions & Refunds Summary (Requirement 6 & 8) */}
+          {(projectRevisions.length > 0 || projectRefunds.length > 0) && (
+            <div className="pt-4 border-t border-slate-100 dark:border-white/5 space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Revisions & Refunds Audit
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {projectRevisions.length > 0 && (
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-2">
+                    <span className="font-bold text-slate-900 dark:text-white block text-xs">
+                      Revisions Log ({projectRevisions.length})
+                    </span>
+                    {projectRevisions.map((rev: any) => (
+                      <div key={rev.id} className="text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
+                        <div className="flex justify-between font-mono text-[10px]">
+                          <span className="text-blue-400 font-bold">{rev.revision_id}</span>
+                          <span className="uppercase text-amber-400 font-bold">{rev.status}</span>
+                        </div>
+                        <p className="text-slate-300 mt-1">{rev.reason}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {projectRefunds.length > 0 && (
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-2">
+                    <span className="font-bold text-slate-900 dark:text-white block text-xs">
+                      Refunds Log ({projectRefunds.length})
+                    </span>
+                    {projectRefunds.map((ref: any) => (
+                      <div key={ref.id} className="text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
+                        <div className="flex justify-between font-mono text-[10px]">
+                          <span className="text-rose-400 font-bold">{ref.refund_id}</span>
+                          <span className="uppercase text-emerald-400 font-bold">{ref.status}</span>
+                        </div>
+                        <div className="flex justify-between mt-1 text-slate-300">
+                          <span>Amount: ${ref.amount.toFixed(2)} (Demo)</span>
+                          <span className="text-slate-400 text-[10px]">{ref.reason}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -883,7 +1109,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         </div>
       )}
 
-      {/* MODAL 1: FUND ESCROW MODAL */}
+      {/* MODAL 1: FUND ESCROW MODAL (DEMO ESCROW PAYMENT MODE - Requirement 5) */}
       {showFundModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 text-xs">
@@ -892,13 +1118,22 @@ export const ProjectWorkspacePage: React.FC = () => {
                 <Lock className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white">Fund Escrow Vault</h3>
-                <p className="text-[11px] text-slate-500">Simulated Escrow Payment System (ACID Guarantee)</p>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">Demo Payment Confirmation</h3>
+                  <span className="text-[10px] uppercase font-mono font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded border border-amber-500/25">
+                    DEMO ESCROW MODE
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500">Autonomous Escrow Engine · Simulated Gateway</p>
               </div>
             </div>
 
+            <div className="p-3 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 text-[11px] text-blue-800 dark:text-blue-300">
+              <strong>DEMO ESCROW PAYMENT MODE:</strong> No real bank charges or credit card withdrawals will occur. Funds are safely simulated and committed to the local MySQL escrow ledger. State transitions: <code>CREATED → FUNDED → HELD</code>.
+            </div>
+
             <div>
-              <label className="block font-semibold mb-1">Deposit Amount (USD)</label>
+              <label className="block font-semibold mb-1">Escrow Deposit Amount (USD)</label>
               <input
                 type="number"
                 value={fundAmount}
@@ -907,9 +1142,14 @@ export const ProjectWorkspacePage: React.FC = () => {
               />
             </div>
 
-            <p className="text-slate-500 text-[11px] leading-relaxed">
-              Funds are held programmatically in the Trust Vault. The freelancer cannot withdraw until you inspect and approve their submitted deliverables.
-            </p>
+            <div>
+              <label className="block font-semibold mb-1">Simulated Gateway Provider</label>
+              <select className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <option value="demo_escrow">TrustLance Demo Escrow Vault (Active)</option>
+                <option value="stripe_sandbox" disabled>Stripe Connect Sandbox (Future Gateway)</option>
+                <option value="razorpay_sandbox" disabled>Razorpay Route Sandbox (Future Gateway)</option>
+              </select>
+            </div>
 
             <div className="flex justify-end gap-2 pt-2">
               <button
@@ -925,7 +1165,7 @@ export const ProjectWorkspacePage: React.FC = () => {
                 onClick={handleFundEscrow}
                 className="btn-primary-gradient px-4 py-2 text-xs font-bold"
               >
-                {loading ? 'Securing Funds...' : `Confirm Deposit $${fundAmount}`}
+                {loading ? 'Securing Funds...' : `Confirm Demo Escrow Deposit ($${fundAmount.toFixed(2)})`}
               </button>
             </div>
           </div>
@@ -1011,6 +1251,111 @@ export const ProjectWorkspacePage: React.FC = () => {
                 className="btn-primary-gradient px-4 py-2 text-xs font-semibold"
               >
                 Send Revision Feedback
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: APPROVE DELIVERABLE & RELEASE PAYMENT (Requirement 7) */}
+      {showApproveModal && selectedDeliverableForApproval && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 dark:text-white">Approve Deliverable & Release Escrow Payment</h3>
+                <p className="text-[11px] text-slate-500">Atomic Database Transaction Execution (ACID Guaranteed)</p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Deliverable:</span>
+                <strong className="text-slate-900 dark:text-white">{selectedDeliverableForApproval.title}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Version:</span>
+                <span className="font-mono font-bold">v{selectedDeliverableForApproval.version}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Escrow Amount to Release:</span>
+                <strong className="text-emerald-600 dark:text-emerald-400 font-mono text-sm">
+                  ${(data.escrow?.held_amount || project.budget).toFixed(2)}
+                </strong>
+              </div>
+            </div>
+
+            {/* Atomic transaction operations list */}
+            <div className="space-y-1.5 p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 text-[11px] text-emerald-900 dark:text-emerald-300">
+              <span className="font-bold block uppercase tracking-wider text-[10px]">
+                Backend Transaction Operations (All-or-Nothing):
+              </span>
+              <ul className="list-disc pl-4 space-y-1 text-[11px]">
+                <li>Change Escrow state from <code>UNDER_REVIEW</code> to <code>RELEASED</code>.</li>
+                <li>Credit freelancer wallet balance (+${(data.escrow?.held_amount || project.budget).toFixed(2)}).</li>
+                <li>Write immutable transaction receipt into MySQL financial ledger.</li>
+                <li>Mark project status as <code>COMPLETED</code> and log immutable audit entry.</li>
+                <li>Dispatch automated notification receipts to customer and freelancer.</li>
+              </ul>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowApproveModal(false)}
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={handleApproveAndRelease}
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
+              >
+                {loading ? 'Executing Transaction...' : 'Confirm Approval & Release Payment'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: RESUBMIT REVISED DELIVERABLE */}
+      {showResubmitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 text-xs">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">Submit Revised Deliverable</h3>
+            <p className="text-[11px] text-slate-500">Provide details on the updates made to address customer revision feedback.</p>
+
+            <div>
+              <label className="block font-semibold mb-1">Revision Changelog & Notes</label>
+              <textarea
+                rows={4}
+                placeholder="Explain the changes made based on customer review comments..."
+                value={resubmitNotes}
+                onChange={(e) => setResubmitNotes(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowResubmitModal(false)}
+                className="btn-secondary-surface px-4 py-2 text-xs font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={handleResubmitDeliverable}
+                className="btn-primary-gradient px-4 py-2 text-xs font-bold"
+              >
+                {loading ? 'Resubmitting...' : 'Resubmit for Customer Approval'}
               </button>
             </div>
           </div>

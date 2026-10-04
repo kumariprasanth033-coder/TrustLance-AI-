@@ -152,7 +152,7 @@ export interface EscrowAccount {
   held_amount: number;
   released_amount: number;
   refunded_amount: number;
-  status: 'pending_funding' | 'funded_held' | 'partially_released' | 'fully_released' | 'refund_pending' | 'refunded' | 'disputed';
+  status: EscrowState | 'pending_funding' | 'funded_held' | 'partially_released' | 'fully_released' | 'refund_pending' | 'refunded' | 'disputed' | string;
   created_at: string;
 }
 
@@ -331,5 +331,6 @@ export interface TestResultItem {
   duration_ms: number;
   timestamp: string;
   audit_entry?: ActivityLog;
+  steps?: string[];
   details?: Record<string, any>;
 }

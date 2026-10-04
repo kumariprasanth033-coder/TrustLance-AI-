@@ -1219,10 +1219,11 @@ export const escrowApi = {
     const project = projects.find(p => p.id === projectId);
     if (!project) throw new Error('Project not found.');
 
-    let escrow = escrows.find(e => e.project_id === projectId);
+    const existingEscrow = escrows.find(e => e.project_id === projectId);
     const refId = `TX-ESCROW-${Date.now().toString().slice(-8)}`;
+    let escrow: EscrowAccount;
 
-    if (!escrow) {
+    if (!existingEscrow) {
       escrow = {
         id: escrows.length + 1,
         project_id: projectId,
@@ -1237,9 +1238,10 @@ export const escrowApi = {
       };
       escrows.push(escrow);
     } else {
-      escrow.held_amount += amount;
-      escrow.total_amount = Math.max(escrow.total_amount, escrow.held_amount);
-      escrow.status = 'HELD';
+      existingEscrow.held_amount += amount;
+      existingEscrow.total_amount = Math.max(existingEscrow.total_amount, existingEscrow.held_amount);
+      existingEscrow.status = 'HELD';
+      escrow = existingEscrow;
     }
     setStore('escrows', escrows);
 

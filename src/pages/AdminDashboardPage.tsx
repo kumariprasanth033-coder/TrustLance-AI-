@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   ShieldCheck, 
   Users, 
@@ -103,13 +104,23 @@ export const AdminDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleResetData}
-          className="btn-secondary-surface px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 gap-1.5"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset Platform DB</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/ai-broker"
+            className="btn-primary-gradient px-4 py-2 text-xs font-bold gap-1.5 flex items-center shadow-md shadow-blue-500/20"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>AI Broker & Test Suite</span>
+          </Link>
+
+          <button
+            onClick={handleResetData}
+            className="btn-secondary-surface px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 gap-1.5"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset Platform DB</span>
+          </button>
+        </div>
       </div>
 
       {actionSuccess && (
